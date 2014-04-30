@@ -1,5 +1,5 @@
 Projet E3
-========================
+=========
 
 Equipe
 ------
@@ -8,3 +8,10 @@ Equipe
 - Benjamin Mousseau
 - Chloe Bacquet
 - Nicolas Keller
+
+Intalation
+----------
+
+Pour installer le projet lancer la commande suivante :
+
+$ quick-install
