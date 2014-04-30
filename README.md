@@ -14,4 +14,8 @@ Intalation
 
 Pour installer le projet lancer la commande suivante :
 
-$ quick-install
+```
+> quick-install
+```
+
+Ouvrir le fichier quick-install.bat pour comprendre ce qui ce passe.
