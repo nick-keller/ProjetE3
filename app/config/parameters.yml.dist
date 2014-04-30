@@ -13,3 +13,8 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+
+    security.acl.permission.map.class: Sonata\AdminBundle\Security\Acl\Permission\AdminPermissionMap
+    sonata.user.admin.user.entity: ESIEE\UserBundle\Entity\User
+    sonata.user.admin.group.entity: ESIEE\UserBundle\Entity\Group
