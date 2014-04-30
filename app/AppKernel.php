@@ -28,6 +28,7 @@ class AppKernel extends Kernel
 
             // Custom
             new ESIEE\UserBundle\ESIEEUserBundle(),
+            new ESIEE\GameBundle\ESIEEGameBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

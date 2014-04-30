@@ -1,0 +1,7 @@
+parameters:
+#    esiee_game.example.class: ESIEE\GameBundle\Example
+
+services:
+#    esiee_game.example:
+#        class: %esiee_game.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

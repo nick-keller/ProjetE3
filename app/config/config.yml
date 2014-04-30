@@ -65,6 +65,7 @@ doctrine:
             default:
                 mappings:
                     ESIEEUserBundle: ~
+                    ESIEEGameBundle: ~
                     SonataUserBundle: ~
                     FOSUserBundle: ~
 
