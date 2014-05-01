@@ -2,6 +2,11 @@ parameters:
 #    esiee_game.example.class: ESIEE\GameBundle\Example
 
 services:
-#    esiee_game.example:
-#        class: %esiee_game.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    sonata.admin.ground:
+        class: ESIEE\GameBundle\Admin\GroundAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\Ground
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: Terrains }
