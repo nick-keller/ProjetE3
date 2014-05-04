@@ -10,3 +10,23 @@ services:
             - ~
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: Terrains }
+
+
+    sonata.admin.unittype:
+        class: ESIEE\GameBundle\Admin\UnitTypeAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\UnitType
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Types d'unité" }
+
+
+    sonata.admin.unitspeed:
+        class: ESIEE\GameBundle\Admin\UnitSpeedAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\UnitSpeed
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Coût de déplacement" }
