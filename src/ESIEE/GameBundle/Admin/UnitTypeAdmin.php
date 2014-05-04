@@ -16,6 +16,7 @@ class UnitTypeAdmin extends Admin
         $filter
             ->add('id')
             ->add('name')
+            ->add('speeds')
         ;
     }
 
@@ -25,6 +26,13 @@ class UnitTypeAdmin extends Admin
         $formMapper
             ->add('name', 'text', array(
                 'label' => 'Nom'
+            ))
+            ->add('speeds', 'sonata_type_collection', array(
+//                'type_options' => array('delete' => false)
+            ), array(
+                'edit' => 'inline',
+                'inline' => 'table',
+                'sortable' => 'position',
             ))
         ;
     }

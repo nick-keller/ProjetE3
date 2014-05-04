@@ -29,7 +29,7 @@ class UnitType
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="UnitSpeed", mappedBy="unitType", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="UnitSpeed", mappedBy="unitType", cascade={"persist", "remove"})
      */
     private $speeds;
 

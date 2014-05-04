@@ -25,7 +25,7 @@ class UnitSpeed
     /**
      * @var UnitType
      *
-     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\UnitType", inversedBy="speeds")
+     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\UnitType", inversedBy="speeds", cascade={"persist"})
      * @ORM\JoinColumn(name="unit_type_id", referencedColumnName="id")
      */
     private $unitType;
@@ -33,7 +33,7 @@ class UnitSpeed
     /**
      * @var Ground
      *
-     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\Ground")
+     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\Ground", cascade={"persist"})
      * @ORM\JoinColumn(name="ground_id", referencedColumnName="id")
      */
     private $ground;
@@ -47,7 +47,7 @@ class UnitSpeed
 
     public function __toString()
     {
-        return $this->cost.'';
+        return $this->ground->getName() . ' : ' . $this->cost;
     }
 
 
