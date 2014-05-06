@@ -16,6 +16,7 @@ class GroundAdmin extends Admin
         $filter
             ->add('id')
             ->add('name')
+            ->add('protection')
         ;
     }
 
@@ -25,6 +26,9 @@ class GroundAdmin extends Admin
         $formMapper
             ->add('name', 'text', array(
                 'label' => 'Nom'
+            ))
+            ->add('protection', null, array(
+                'label' => 'Protection'
             ))
         ;
     }
@@ -43,6 +47,9 @@ class GroundAdmin extends Admin
         $listMapper
             ->add('id')
             ->addIdentifier('name')
+            ->add('protection', null, array(
+                'editable' => true,
+            ))
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'show' => array(),

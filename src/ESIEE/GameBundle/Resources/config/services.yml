@@ -30,3 +30,13 @@ services:
             - ~
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Coût de déplacement" }
+
+
+    sonata.admin.unit:
+        class: ESIEE\GameBundle\Admin\UnitAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\Unit
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Unités" }

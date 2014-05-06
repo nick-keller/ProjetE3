@@ -28,6 +28,13 @@ class Ground
      */
     private $name;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="protection", type="integer")
+     */
+    private $protection;
+
 
     public function __toString()
     {
@@ -66,5 +73,21 @@ class Ground
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param int $protection
+     */
+    public function setProtection($protection)
+    {
+        $this->protection = $protection;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProtection()
+    {
+        return $this->protection;
     }
 }

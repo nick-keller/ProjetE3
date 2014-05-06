@@ -33,6 +33,11 @@ class UnitType
      */
     private $speeds;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Unit", mappedBy="unitType", cascade={"persist"})
+     */
+    private $units;
+
 
     /**
      * Constructor
@@ -40,6 +45,7 @@ class UnitType
     public function __construct()
     {
         $this->speeds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->units = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -112,5 +118,38 @@ class UnitType
     public function getSpeeds()
     {
         return $this->speeds;
+    }
+
+    /**
+     * Add units
+     *
+     * @param \ESIEE\GameBundle\Entity\Unit $units
+     * @return UnitType
+     */
+    public function addUnit(\ESIEE\GameBundle\Entity\Unit $units)
+    {
+        $this->units[] = $units;
+
+        return $this;
+    }
+
+    /**
+     * Remove units
+     *
+     * @param \ESIEE\GameBundle\Entity\Unit $units
+     */
+    public function removeUnit(\ESIEE\GameBundle\Entity\Unit $units)
+    {
+        $this->units->removeElement($units);
+    }
+
+    /**
+     * Get units
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUnits()
+    {
+        return $this->units;
     }
 }
