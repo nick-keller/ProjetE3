@@ -1,0 +1,139 @@
+{
+	0: {
+		name: "road",
+		protection: 0,
+		moveFactor: {
+			"foot": 1,
+			"wheel": 0.5,
+			"chain": 1,
+			"horse": 1
+		},
+		sprite: null
+	},
+
+	1: {
+		name: "plain",
+		protection: 1,
+		moveFactor: {
+			"foot": 1,
+			"wheel": 1,
+			"chain": 1,
+			"horse": 1,
+			"boat": 999,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	2: {
+		name: "forest",
+		protection: 3,
+		moveFactor: {
+			"foot": 1,
+			"wheel": 2,
+			"chain": 2,
+			"horse": 1,
+			"boat": 999,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	3: {
+		name: "mountain",
+		protection: 5,
+		moveFactor: {
+			"foot": 1,
+			"wheel": 5,
+			"chain": 3,
+			"horse": 2,
+			"boat": 999,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	4: {
+		name: "high mountain",
+		protection: 0,
+		moveFactor: {
+			"foot": 999,
+			"wheel": 999,
+			"chain": 999,
+			"horse": 999,
+			"boat": 999,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	5: {
+		name: "river",
+		protection: -1,
+		moveFactor: {
+			"foot": 3,
+			"wheel": 999,
+			"chain": 999,
+			"horse": 999,
+			"boat": 999,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	6: {
+		name: "beach",
+		protection: 0,
+		moveFactor: {
+			"foot": 1,
+			"wheel": 1,
+			"chain": 1,
+			"horse": 1,
+			"boat": 1,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	7: {
+		name: "ocean",
+		protection: 0,
+		moveFactor: {
+			"foot": 999,
+			"wheel": 999,
+			"chain": 999,
+			"horse": 999,
+			"boat": 1,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	8: {
+		name: "reef", //récif
+		protection: 2,
+		moveFactor: {
+			"foot": 999,
+			"wheel": 999,
+			"chain": 999,
+			"horse": 999,
+			"boat": 2,
+			"plane": 1
+		},
+		sprite: null
+	},
+
+	9: {
+		name: "town",
+		protection: 4,
+		moveFactor: {
+			"foot": 1,
+			"wheel": 1,
+			"chain": 1,
+			"horse": 1,
+			"boat": 999,
+			"plane": 1
+		},
+		sprite: null
+	}
+}
