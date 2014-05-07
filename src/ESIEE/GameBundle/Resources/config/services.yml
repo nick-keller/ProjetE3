@@ -40,3 +40,23 @@ services:
             - ~
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Unités" }
+
+
+    sonata.admin.tilefamily:
+        class: ESIEE\GameBundle\Admin\TileFamilyAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\TileFamily
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Familles de tiles" }
+
+
+    sonata.admin.tile:
+        class: ESIEE\GameBundle\Admin\TileAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\Tile
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Tiles" }
