@@ -29,7 +29,7 @@
 		moveValue: 3
 	},
 
-	3: {
+	2: {
 		name: "Horsemen",
 		desc: "A simple horsemen",
 		longDesc: "A troop of horsemens armed with spikes."+

@@ -1,7 +1,25 @@
 function Game(pMap, pPlayers) {
-	this.players = pplayers || {0: "player1", 1: "player2"};
-	this.map = pMap || defaultmap;
-	this.UnitStorage = {};
+
+	window.g = this;
+
+	this.players = pPlayers || ["player1", "player2"];
+
+	
+
+	var defaultMap = [	[{empty:true}, {empty:true}, {empty:true}, {empty:true}],
+						[{empty:true}, {empty:true}, {empty:true}, {empty:true}],
+						[{empty:true}, {empty:true}, {empty:true}, {empty:true}],
+						[{empty:true}, {empty:true}, {empty:true}, {empty:true}]
+		];
+
+
+	this.map = pMap || defaultMap;
+	this.UnitStorage = [];
+
+	for (var i = this.players.length - 1; i >= 0; i--) {
+		this.UnitStorage.push([]);
+	}
+
 
 	this.turn = 0;
 

@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Example</title>
+        <meta charset="utf-8" />
+        <meta content="text/html; charset=utf-8" />
+    </head>
+
+    <body>
+        <div id="base">
+        </div>
+    </body>
+
+    <script type="text/javascript" src="js/class/Game.js"></script>
+    <script type="text/javascript" src="js/class/Unit.js"></script>
+    <script type="text/javascript">
+        var bowmen = {
+            name: "Bowmen",
+            desc: "An archer",
+            longDesc: "A troop of archers armed with bows."+
+                        "This is the basic ranged unit.",
+            power: 1,
+            range: 3,
+            defense: 0,
+            fast: false,
+            defender: false,
+            assassin: false,
+            moveType: "foot",
+            moveValue: 3,
+
+            player: null
+        };
+
+        new Game();
+
+        new Unit(bowmen, 0, 0, 0);
+
+
+        new Unit(bowmen, 0, 2, 1);
+
+        console.log(g); /*Debug marker*/
+
+    </script>
+</html>

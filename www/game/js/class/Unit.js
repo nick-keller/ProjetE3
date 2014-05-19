@@ -23,8 +23,8 @@ function Unit(param, x, y, player) {
 	this.guarding = false;
 
 	// To execute at initialization
-
 	g.map[this.x][this.y].unit = this;
+	g.map[this.x][this.y].empty = false;
 	// TODO: place the unit on the maps
 	g.UnitStorage[this.player].push([this.x, this.y]);
 
@@ -32,6 +32,7 @@ function Unit(param, x, y, player) {
 	this.moved = false;
 	this.attacked = false;
 
+	return this;
 }
 
 
@@ -58,10 +59,10 @@ Unit.prototype.moveToCell = function(px, py) {
 	if (this.moved === true)
 		return new Error("This unit already has moved");
 
-	if (g.map[x][y].unit !== null)
-		return new Error("There is already an unit in the cell "+x+";"+j);
+	if (g.map[px][py].empty === false)
+		return new Error("There is already an unit in the cell "+px+";"+py);
 
-	if (abs(this.x-px) + abs(this.y-py) > this.moveValue)
+	if (Math.abs(this.x-px) + Math.abs(this.y-py) > this.moveValue)
 		return new Error("Impossible to move this far");
 
 	// Update the position in UnitStorage
@@ -75,13 +76,14 @@ Unit.prototype.moveToCell = function(px, py) {
 
 	var tmp = g.map[this.x][this.y].unit;
 
-	g.map[this.x][this.y].unit = null;
+	g.map[this.x][this.y].unit = {empty:true};
 	this.x = px;
 	this.y = py;
 
 	// TODO: move animation
 
 	g.map[this.x][this.y].unit = tmp;
+	g.map[this.x][this.y].empty = false;
 
 	this.moved = true;
 
@@ -103,7 +105,7 @@ Unit.prototype.attack = function(unitB) {
 		return new Error("Attacking your own unit would be pretty stupid");
 
 	unitA.attacked = true;
-
+	// TODO: take in account the range for the riposte (?)
 	if (unitB.defender || unitB.guarding) {
 		// TODO: play guarding animation
 		if (!unitA.assassinue) {
@@ -152,7 +154,7 @@ Unit.prototype.destroy = function() {
 
     delete g.map[this.x][this.y].unit;
 
-    g.map[this.x][this.y].unit = null;
+    g.map[this.x][this.y].unit = {empty:true};
 
 
     // TODO: destroying animation

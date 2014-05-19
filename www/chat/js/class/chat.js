@@ -1,6 +1,8 @@
 function Chat() {
   window.c = this;
 
+  this.retry = false;
+
   window.peerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
   window.sessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
   navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
@@ -24,8 +26,6 @@ function Chat() {
   var base = document.getElementById('base');
   base.appendChild(c.notif);
 
-  c.setNotif("test", true);
-
   c.localTest();
 
 }
@@ -36,8 +36,6 @@ Chat.prototype.initiate = function(param) {
   c.remoteVideo = document.createElement('video');
   c.peerConnection = null;
   c.remoteStream = null;
-
-  localTest();
 
   navigator.getUserMedia(param, function(stream) {
     if (stream.getAudioTracks().length === 0 && param.audio)
@@ -103,24 +101,6 @@ Chat.prototype.setNotif = function(string, bool) {
 };
 
 
-Chat.prototype.testBrowser = function(userAgent) {
-  // TODO: do for all browsers
-  return false;
-};
-
-
-
-Chat.prototype.checkStunTurn = function(desc) {
-  if (!desc.sdp.match(/srflx/))
-    return new Error("STUN_ERROR");
-  // if (!desc.sdp.match(/turn/))
-  //   return new Error("TURN_ERROR");
-  return false;
-};
-
-
-
-
 
 
 Chat.prototype.localTest = function() {
@@ -131,10 +111,27 @@ Chat.prototype.localTest = function() {
   var ok1 = false;
   var ok2 = false;
 
+  var browser = null;
 
+  var userAgent = navigator.userAgent;
 
+  if (userAgent.match(/Firefox/)) {
+    if (userAgent.match(/Firefox\/[0-9]+\./)[1] < 29) {
+      c.handleError(new Error("MOZ_TOO_OLD"));
+    } else {
+      browser = "mozilla";
+    }
+  }
 
-  // c.handleError(c.testBrowser(navigator.userAgent));
+  if (userAgent.match(/Chrome/)) {
+    if (userAgent.match(/Chrome\/[0-9]+\./)[1] < 34) {
+      c.handleError(new Error("CHROME_TOO_OLD"));
+    } else {
+      browser = "chrome";
+    }
+  }
+
+  
   c.setNotif("Setting up fake stream...");
   navigator.getUserMedia({video: true, audio: true, fake: true},
                           function(fakeStream1) {
@@ -142,24 +139,38 @@ Chat.prototype.localTest = function() {
                             function(fakeStream2) {
       
       c.setNotif("Testing audio/video tracks...");
-    
-      var pcDefautlConfig = [{"url": "stun:stun.services.mozilla.com"}];
 
-      // var pcViagenieConfig = {iceServers:
-      //   [{
-      //     url: "turn:66.228.45.110:3478", // numb.viagenie.ca
-      //     username: "benjamin.mousseau@gmail.com",
-      //     credential: "webrtc"
-      //   }]
-      // };
 
-      c.setNotif("Setting pc1...");
+      var pcDefautlConfig = { "iceServers": [
+          {url:'stun:stun.services.mozilla.com'},
+          {url:'stun:stun.l.google.com:19302'},
+          {url:'stun:stun1.l.google.com:19302'},
+          {url:'stun:stun2.l.google.com:19302'},
+          {url:'stun:stun3.l.google.com:19302'},
+          {url:'stun:stun4.l.google.com:19302'},
+          // {
+          //     url: 'turn:numb.viagenie.ca',
+          //     credential: 'muazkh',
+          //     username: 'webrtc@live.com'
+          // },
+          // {
+          //     url: 'turn:192.158.29.39:3478?transport=udp',
+          //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          //     username: '28224511:1379330808'
+          // },
+          // {
+          //     url: 'turn:192.158.29.39:3478?transport=tcp',
+          //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          //     username: '28224511:1379330808'
+          // }
+      ]};
+
+      c.setNotif("Setting up pc1...");
       pc1 = new peerConnection(pcDefautlConfig);
       pc1.addStream(fakeStream1);
       pc1.onaddstream = function() {
         if (ok2 === true) {
-          c.setNotif("localTest successful, initializing the chat...", true);
-          console.log("localTest ended");
+          localTestEnded();
         }
         else {
           ok1 = true;
@@ -168,13 +179,12 @@ Chat.prototype.localTest = function() {
       };
 
 
-      c.setNotif("Setting pc2...");
+      c.setNotif("Setting up pc2...");
       pc2 = new peerConnection(pcDefautlConfig);
       pc2.addStream(fakeStream2);
       pc2.onaddstream = function() {
         if (ok1 === true) {
-          c.setNotif("localTest successful, initializing the chat...", true);
-          console.log("localTest ended");
+          localTestEnded();
         }
         else {
           ok2 = true;
@@ -189,16 +199,19 @@ Chat.prototype.localTest = function() {
         pc1.setLocalDescription(descO,function() {
 
           c.setNotif("Setting pc2 remoteDescription...");
-          pc2.setRemoteDescription(new mozRTCSessionDescription(descO),
+          pc2.setRemoteDescription(new sessionDescription(descO),
                                     function() {
      
             c.setNotif("Creating answer...");
             pc2.createAnswer(function(descA) {
+              console.log("\n\n"+descO.sdp+"\n\n"); /*Debug marker*/
              
               c.setNotif("Checking connection to STUN/TURN servers...");
-              if (!descA.sdp.match(/srflx/)){
-                c.handleError(new Error("STUN_ERROR"));
-              }
+              if (!descA.sdp.match(/host/) && browser === "mozilla")
+                c.handleError(new Error("CONNEC_ERROR"));
+
+              if (!descA.sdp.match(/srflx/) && browser === "mozilla")
+                c.handleError(new Error("STUN_ERROR"))
               // if (!desc.sdp.match(/turn/))
               //   throw new Error("TURN_ERROR");
 
@@ -207,7 +220,7 @@ Chat.prototype.localTest = function() {
                 
                 c.setNotif("Setting pc1 remoteDescription and "+
                             "waiting for onAddStream calls...");
-                pc1.setRemoteDescription(new mozRTCSessionDescription(descA),
+                pc1.setRemoteDescription(new sessionDescription(descA),
                                           function(){
 
                   console.log("pc1: "+
@@ -231,45 +244,58 @@ Chat.prototype.localTest = function() {
       },c.handleError);
     },c.handleError);
   },c.handleError);
+
+
+  /** Function to call when the local test ended sucessfully;
+   */
+  function localTestEnded() {
+    pc1.close();
+    pc2.close();
+    c.setNotif("localTest successful, initializing the chat...", true);
+    console.log("localTest ended");
+    initiate.bind(c);
+    return;
+  }
+
+  /** Function count the occurrences of substring in a string;
+   * @param {String} string   Required. The string;
+   * @param {String} subString    Required. The string to search for;
+   * @param {Boolean} allowOverlapping    Optional. Default: false;
+   */
+  function occurrences(string, subString){
+
+    string+=""; subString+="";
+    if(subString.length<=0) return string.length+1;
+
+    var n=0, pos=0;
+    var len = subString.length;
+    while(true){
+      pos=string.indexOf(subString,pos);
+      if(pos>=0){ n++; pos+= len; } else break;
+    }
+    return(n);
+  }
+
 };   // localTest
 
 
-/** Function count the occurrences of substring in a string;
- * @param {String} string   Required. The string;
- * @param {String} subString    Required. The string to search for;
- * @param {Boolean} allowOverlapping    Optional. Default: false;
- */
-function occurrences(string, subString){
-
-  string+=""; subString+="";
-  if(subString.length<=0) return string.length+1;
-
-  var n=0, pos=0;
-  var len = subString.length;
-  while(true){
-    pos=string.indexOf(subString,pos);
-    if(pos>=0){ n++; pos+= len; } else break;
-  }
-  return(n);
-}
 
 
-
-// TTTTTTTTTTOOOOOOOOOOODDDDDDDDDDDDDDOOOOOOOOOOOOOOO: handleError
 Chat.prototype.handleError = function(e) {
   if (e.name !== "Error")
     return;
 
   switch(e.message){
 
-    // case "NOT_MOZ":
-    //   c.setNotif("This test is engineered to be used on Firefox",false);
-    //   break;
-  
-    // case "MOZ_TOO_OLD":
-    //   c.setNotif("Your version of Firefox is not up to date<br>"+
-    //     "Please update Firefox in <code>Help -> About Firefox</code>",false);
-    //   break;
+    case "MOZ_TOO_OLD":
+      c.setNotif("Your version of Firefox isnt up to date.<br>"+
+        "Please update it <a href=''>here</a>",false);
+      break;
+
+     case "CHROME_TOO_OLD":
+      c.setNotif("Your version of Chrome isnt up to date.<br>"+
+        "Please update it <a href=''>here</a>",false);
+      break;
   
     case "AUDIO_ERROR":
       c.setNotif("No sound is captured<ul>"+
@@ -302,6 +328,10 @@ Chat.prototype.handleError = function(e) {
         "</ul>",false);
       break;
   
+    case "CONNEC_ERROR":
+      c.setNotif("Could not connect to the internet",false);
+      break;
+
     case "STUN_ERROR":
       c.setNotif("Could not connect to the stun server",false);
       break;
