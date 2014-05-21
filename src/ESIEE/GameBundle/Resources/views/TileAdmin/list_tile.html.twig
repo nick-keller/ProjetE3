@@ -1,0 +1,7 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field%}
+    <div style="width: 16px;height: 16px;background: url('{{ asset('spritesheet/tiles.png') }}');background-position: -{{ object.coordX*16 }}px -{{ object.coordY*16 }}px;">
+
+    </div>
+{% endblock %}

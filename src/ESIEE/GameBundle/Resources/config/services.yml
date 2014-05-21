@@ -2,6 +2,16 @@ parameters:
 #    esiee_game.example.class: ESIEE\GameBundle\Example
 
 services:
+    game.form.type.tiletype:
+        class: ESIEE\GameBundle\Form\Type\TileType
+        tags:
+            - { name: form.type, alias: tiletype }
+
+    game.form.type.tileselector:
+        class: ESIEE\GameBundle\Form\Type\TileSelectorType
+        tags:
+            - { name: form.type, alias: tileselector }
+
     sonata.admin.ground:
         class: ESIEE\GameBundle\Admin\GroundAdmin
         arguments:

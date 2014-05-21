@@ -18,8 +18,11 @@ class TileAdmin extends Admin
             ->add('id')
             ->add('tileFamily')
             ->add('type')
-            ->add('coordX')
-            ->add('coordY')
+            ->add('distribution')
+            ->add('tile', 'string', array(
+                'name' => 'lol',
+                'template' => 'ESIEEGameBundle:TileAdmin:list_tile.html.twig'
+            ))
         ;
     }
 
@@ -28,31 +31,23 @@ class TileAdmin extends Admin
     {
         $formMapper
             ->add('tileFamily', null, array(
-                'label' => 'Famille de tuile'
+                'label' => 'Famille de tuile',
+                'empty_value' => false,
             ))
-            ->add('type', 'choice', array(
+            ->add('coordX', 'tileselector', array(
+                'label' => 'Tuile'
+            ))
+            ->add('type', 'tiletype', array(
                 'label' => 'Type',
+            ))
+            ->add('distribution', 'choice', array(
                 'choices' => array(
-                    Tile::TOP_LEFT => 'Coins haut gauche',
-                    Tile::TOP_RIGHT => 'Coins haut droit',
-                    Tile::BOTTOM_LEFT => 'Coins bas gauche',
-                    Tile::BOTTOM_RIGHT => 'Coins bas droit',
-                    Tile::TOP => 'Bord haut',
-                    Tile::RIGHT => 'Bord droit',
-                    Tile::BOTTOM => 'Bord bas',
-                    Tile::LEFT => 'Bord gauche',
-                    Tile::CENTER => 'Centre',
-                    Tile::INNER_TOP_LEFT => 'Coins intérieur haut gauche',
-                    Tile::INNER_TOP_RIGHT => 'Coins intérieur haut droit',
-                    Tile::INNER_BOTTOM_LEFT => 'Coins intérieur bas gauche',
-                    Tile::INNER_BOTTOM_RIGHT => 'Coins intérieur bas droit',
+                    Tile::RANDOM => 'Aléatoire',
+                    Tile::CHECKER_TOP_LEFT => 'Haut gauche',
+                    Tile::CHECKER_TOP_RIGHT => 'Haut droit',
+                    Tile::CHECKER_BOTTOM_LEFT => 'Bas gauche',
+                    Tile::CHECKER_BOTTOM_RIGHT => 'Bas droit',
                 )
-            ))
-            ->add('coordX', null, array(
-                'label' => 'Coordonée X'
-            ))
-            ->add('coordY', null, array(
-                'label' => 'Coordonée Y'
             ))
         ;
     }
@@ -72,8 +67,9 @@ class TileAdmin extends Admin
         $listMapper
             ->addIdentifier('id')
             ->add('tileFamily')
-            ->add('corrdX')
-            ->add('corrdY')
+            ->add('tile', 'string', array(
+                'template' => 'ESIEEGameBundle:TileAdmin:list_tile.html.twig'
+            ))
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'show' => array(),

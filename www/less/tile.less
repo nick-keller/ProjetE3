@@ -1,0 +1,25 @@
+.tile{
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    z-index: 1;
+
+    background: url('../spritesheet/tilesx2.png');
+
+    .i-loop (@i) when (@i > 0) {
+
+        .j-loop (@j) when (@j > 0) {
+            @x = @i - 1;
+            @y = @j - 1;
+            &.tile-@{x}-@{y} {background-position: -@x * 32px -@y * 32px;}
+
+            .j-loop(@j - 1);
+        }
+        .j-loop (0) {}
+        .j-loop(16);
+
+        .i-loop(@i - 1);
+    }
+    .i-loop (0) {}
+    .i-loop(16);
+}

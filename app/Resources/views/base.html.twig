@@ -3,11 +3,33 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+            {% stylesheets
+            'less/layout.less'
+            'less/tile.less'
+            'less/editor.less'
+            filter='cssrewrite'
+            output='css/main.css'
+            %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
+            {% endstylesheets %}
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+            <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+            {% javascripts
+                'js/tab.js'
+                'js/canvas.js'
+                'js/editor.js'
+            output='js/script.js'
+            %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock %}
     </body>
 </html>

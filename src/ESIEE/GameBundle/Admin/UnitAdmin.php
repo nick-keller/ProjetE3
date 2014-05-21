@@ -39,6 +39,7 @@ class UnitAdmin extends Admin
             ))
             ->add('unitType', null, array(
                 'label' => 'Type d\'unité',
+                'empty_value' => false,
             ))
         ->end()
         ->with('Description')

@@ -36,6 +36,20 @@ class TileFamily
      */
     private $ground;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Tile", mappedBy="tileFamily")
+     */
+    private $tiles;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tiles = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 
     public function __toString()
     {
@@ -97,5 +111,38 @@ class TileFamily
     public function getGround()
     {
         return $this->ground;
+    }
+
+    /**
+     * Add tiles
+     *
+     * @param \ESIEE\GameBundle\Entity\Tile $tiles
+     * @return TileFamily
+     */
+    public function addTile(\ESIEE\GameBundle\Entity\Tile $tiles)
+    {
+        $this->tiles[] = $tiles;
+
+        return $this;
+    }
+
+    /**
+     * Remove tiles
+     *
+     * @param \ESIEE\GameBundle\Entity\Tile $tiles
+     */
+    public function removeTile(\ESIEE\GameBundle\Entity\Tile $tiles)
+    {
+        $this->tiles->removeElement($tiles);
+    }
+
+    /**
+     * Get tiles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTiles()
+    {
+        return $this->tiles;
     }
 }

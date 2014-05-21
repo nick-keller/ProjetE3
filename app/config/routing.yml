@@ -1,3 +1,7 @@
+esiee_editor:
+    resource: "@ESIEEEditorBundle/Resources/config/routing.yml"
+    prefix:   /editor
+
 esiee_game:
     resource: "@ESIEEGameBundle/Resources/config/routing.yml"
     prefix:   /

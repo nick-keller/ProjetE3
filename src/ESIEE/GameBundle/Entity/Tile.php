@@ -16,16 +16,22 @@ class Tile
     const TOP_LEFT = 0;
     const TOP = 1;
     const TOP_RIGHT = 2;
-    const RIGHT = 3;
-    const BOTTOM_RIGHT = 4;
-    const BOTTOM = 5;
+    const LEFT = 3;
+    const CENTER = 4;
+    const RIGHT = 5;
     const BOTTOM_LEFT = 6;
-    const LEFT = 7;
-    const CENTER = 8;
+    const BOTTOM = 7;
+    const BOTTOM_RIGHT = 8;
     const INNER_TOP_LEFT = 9;
     const INNER_TOP_RIGHT = 10;
-    const INNER_BOTTOM_RIGHT = 11;
-    const INNER_BOTTOM_LEFT = 12;
+    const INNER_BOTTOM_LEFT = 11;
+    const INNER_BOTTOM_RIGHT = 12;
+
+    const RANDOM = 0;
+    const CHECKER_TOP_LEFT = 1;
+    const CHECKER_TOP_RIGHT = 2;
+    const CHECKER_BOTTOM_LEFT = 3;
+    const CHECKER_BOTTOM_RIGHT = 4;
 
 
     /**
@@ -59,9 +65,16 @@ class Tile
     private $type;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="distribution", type="integer")
+     */
+    private $distribution;
+
+    /**
      * @var Ground
      *
-     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\TileFamily")
+     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\TileFamily", inversedBy="tiles")
      * @ORM\JoinColumn(name="tile_family_id", referencedColumnName="id")
      */
     private $tileFamily;
@@ -85,6 +98,12 @@ class Tile
      */
     public function setCoordX($coordX)
     {
+        if(preg_match('#^[0-9]+-[0-9]+$#', $coordX)){
+            $data = explode('-', $coordX);
+            $this->coordX = $data[0];
+            $this->coordY = $data[1];
+        }
+
         $this->coordX = $coordX;
 
         return $this;
@@ -167,5 +186,21 @@ class Tile
     public function getTileFamily()
     {
         return $this->tileFamily;
+    }
+
+    /**
+     * @param int $distribution
+     */
+    public function setDistribution($distribution)
+    {
+        $this->distribution = $distribution;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDistribution()
+    {
+        return $this->distribution;
     }
 }

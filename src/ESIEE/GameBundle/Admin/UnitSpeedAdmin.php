@@ -26,9 +26,11 @@ class UnitSpeedAdmin extends Admin
         $formMapper
             ->add('unitType', null, array(
                 'label' => 'Type d\'unité',
+                'empty_value' => false,
             ))
             ->add('ground', null, array(
                 'label' => 'Terrain',
+                'empty_value' => false,
             ))
             ->add('cost', null, array(
                 'label' => 'Coût',

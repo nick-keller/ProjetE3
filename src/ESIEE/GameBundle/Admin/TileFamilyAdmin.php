@@ -25,7 +25,8 @@ class TileFamilyAdmin extends Admin
     {
         $formMapper
             ->add('ground', null, array(
-                'label' => 'Terrain'
+                'label' => 'Terrain',
+                'empty_value' => false,
             ))
             ->add('name', 'text', array(
                 'label' => 'Nom'

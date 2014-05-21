@@ -1,0 +1,63 @@
+<script type="text/javascript">
+    var tileFamily = {{ tileFamilySimple|json_encode|raw }};
+    var tiles = {{ tilesSimple|json_encode|raw }};
+</script>
+
+<div class="map-editor">
+    <div class="playground">
+        <canvas data-layer="buffer"></canvas>
+        <canvas data-layer="background"></canvas>
+        <canvas data-layer="ui"></canvas>
+    </div>
+    <div class="menu">
+        <ul class="tabs" data-tab-container="main-menu">
+            <li data-target="world" title="Monde">
+                <i class="fa fa-globe"></i>
+            </li>
+            <li data-target="ground" title="Terrain">
+                <i class="fa fa-tree"></i>
+            </li>
+        </ul>
+        <div class="tab-content" data-container-name="main-menu">
+            <div data-tab="world">
+                <ul class="tabs" data-tab-container="world-menu">
+                    <li data-target="main">
+                        Général
+                    </li>
+                </ul>
+                <div data-container-name="world-menu">
+                    <div data-tab="main">
+                        nom
+                        type
+                        taille
+                    </div>
+                </div>
+            </div>
+            <div data-tab="ground">
+                <ul class="tabs" data-tab-container="ground-menu">
+                    {% for family in tileFamily %}
+                        <li data-target="{{ family.id }}">
+                            {{ family }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div data-container-name="ground-menu">
+                    {% for family in tileFamily %}
+                        <div data-tab="{{ family.id }}">
+                            <div class="tile auto" data-family="{{ family.id }}" data-id="0">
+                                <i class="fa fa-magic"></i>
+                            </div>
+                            {% for tile in family.tiles %}
+                                <div
+                                        class="tile tile-{{ tile.coordX }}-{{ tile.coordY }}"
+                                        data-id="{{ tile.id }}"
+                                        data-family="{{ family.id }}"
+                                ></div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

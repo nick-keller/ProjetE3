@@ -1,0 +1,3 @@
+esiee_editor_homepage:
+    pattern:  /
+    defaults: { _controller: ESIEEEditorBundle:Editor:editor }

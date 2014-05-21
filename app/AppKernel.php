@@ -17,6 +17,11 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 
+            // JMS
+            new JMS\AopBundle\JMSAopBundle(),
+            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+
             // Sonata
             new Sonata\CoreBundle\SonataCoreBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
@@ -29,6 +34,7 @@ class AppKernel extends Kernel
             // Custom
             new ESIEE\UserBundle\ESIEEUserBundle(),
             new ESIEE\GameBundle\ESIEEGameBundle(),
+            new ESIEE\EditorBundle\ESIEEEditorBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

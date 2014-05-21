@@ -1,0 +1,211 @@
+@width: 640px;
+@height: 384px;
+
+.map-editor{
+    .playground{
+        width: @width;
+        height: @height;
+        position: absolute;
+
+        background-color:#269;
+        background-image: linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+        background-size:64px 64px, 64px 64px, 16px 16px, 16px 16px;
+        background-position:-1px -1px, -1px -1px, -0px -0px, -0px -0px;
+
+        canvas {
+            width: @width;
+            height: @height;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            &[data-layer="buffer"]{
+                display: none;
+            }
+        }
+    }
+
+    .menu{
+        position: relative;
+        width: 300px;
+        height: @height;
+        margin-left: @width;
+        padding-top: 1px;
+
+        background: #3a3a3a;
+
+        > .tabs{
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            margin: 0;
+            padding: 0;
+            width: 37px;
+
+            list-style: none;
+
+            background: #535353;
+            border: solid 1px #282828;
+            box-shadow: 0 1px #6a6a6a inset;
+
+            li{
+                display: block;
+                width: 29px;
+                height: 22px;
+                margin: 2px 0 0 3px;
+
+                text-align: center;
+
+                border: solid 1px transparent;
+                border-radius: 2px;
+                color: #e0e0e0;
+                text-shadow: 0 -1px #232323;
+
+                cursor: pointer;
+
+                &:hover{
+                    border-color: #303030;
+                    background: #757575;
+                    box-shadow: 0 1px #919191 inset, 0 1px #6a6a6a;
+                }
+
+                &.active{
+                    border-color: #272727;
+                    background: #3f3f3f;
+                    box-shadow: 0 1px #333333 inset, 0 1px #6a6a6a;
+                }
+            }
+        }
+
+        > .tab-content{
+            margin: 1px 1px 0 40px;
+
+            background: #535353;
+            border: solid 1px #282828;
+            color: white;
+            text-shadow: 0 -1px #404040;
+
+            [data-tab]{
+                display: none;
+                padding: 0 2px 2px 2px;
+
+                .tile{
+                    position: relative;
+                    margin-bottom: 2px;
+                    border: solid 1px #3a3a3a;
+                    cursor: pointer;
+                    vertical-align: middle;
+
+                    &.auto{
+                        background: #3a3a3a;
+                        text-align: center;
+                        line-height: 32px;
+                    }
+
+                    &:hover:after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+
+                        background: rgba(255,255,255,.3);
+                    }
+
+                    &.active:after{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+
+                        background: rgba(255,255,255,.5);
+                    }
+                }
+
+                &.active{
+                    display: block;
+                }
+            }
+
+            .tabs{
+                margin: 0 0 4px 0;
+                padding: 0;
+                list-style: none;
+                font-size: 0;
+
+                color: #e1e1e1;
+                background: #3b3b3b;
+                border-bottom: solid 1px #282828;
+                box-shadow: 0 1px #4a4a4a inset, 0 1px #6a6a6a;
+
+                li{
+                    position: relative;
+                    display: inline-block;
+                    padding: 0 7px;
+                    font-size: 12px;
+
+                    border-right: solid 1px #282828;
+                    cursor: pointer;
+
+                    &:hover{
+                        background: #454545;
+                        box-shadow: 0 1px #595959 inset;
+                    }
+
+                    &.active{
+                        background: #535353;
+                        box-shadow: 0 1px #6a6a6a inset;
+
+                        &:after{
+                            content: "";
+                            position: absolute;
+                            display: block;
+                            left: 0;
+                            right: 0;
+                            bottom: -2px;
+                            height: 2px;
+                            background: #535353;
+                        }
+                    }
+
+                    &.more-tabs{
+                        .more-tabs-content{
+                            position: absolute;
+                            z-index: 1000;
+                            left: 0;
+                            top: 100%;
+                            padding: 2px;
+                            display: none;
+                            min-width: 160px;
+
+                            background: #606060;
+                            border: solid 1px #3a3a3a;
+                            box-shadow: 0 0 0 1px #636363 inset;
+
+                            div{
+                                padding: 0 7px 0 10px;
+
+                                &:hover{
+                                    background: #6d7d92;
+                                }
+                            }
+                        }
+
+                        &:hover{
+                            .more-tabs-content{
+                                display: block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

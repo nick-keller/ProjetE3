@@ -3,6 +3,7 @@
 namespace ESIEE\GameBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * TileRepository
@@ -12,4 +13,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class TileRepository extends EntityRepository
 {
+    public function findAllSimple()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id, t.type, t.distribution, t.coordX x, t.coordY y, IDENTITY(t.tileFamily) family')
+            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }
