@@ -2,38 +2,47 @@ function Game(pMap, pPlayers) {
 
 	window.g = this;
 
-	this.players = pPlayers || ["player1", "player2"];
+	this.idCount = 0;
 
-	
+	this.players = pPlayers || [0, 1];
 
-	var defaultMap = [	[{empty:true}, {empty:true}, {empty:true}, {empty:true}],
-						[{empty:true}, {empty:true}, {empty:true}, {empty:true}],
-						[{empty:true}, {empty:true}, {empty:true}, {empty:true}],
-						[{empty:true}, {empty:true}, {empty:true}, {empty:true}]
+
+	var defaultMap = [	[{unit:null}, {unit:null}, {unit:null}, {unit:null}],
+						[{unit:null}, {unit:null}, {unit:null}, {unit:null}],
+						[{unit:null}, {unit:null}, {unit:null}, {unit:null}],
+						[{unit:null}, {unit:null}, {unit:null}, {unit:null}]
 		];
+
+	// x are up/down, and y are left/right
 
 
 	this.map = pMap || defaultMap;
-	this.UnitStorage = [];
+	this.UnitStorage = { 0:{}, 1:{} };
 
-	for (var i = this.players.length - 1; i >= 0; i--) {
-		this.UnitStorage.push([]);
-	}
-
+	// for (var i = this.players.length - 1; i >= 0; i--) {
+	// 	this.UnitStorage.player[i] = {};
+	// }
 
 	this.turn = 0;
 
 
-	this.cycleTurn = function() {
-		for (var i = Unit.prototype.UnitStorage[this.turn].length - 1; i >= 0; i--) {
-			var tmpUnit = g.map[g.UnitStorage[this.turn][i][0]] [g.UnitStorage[this.turn][i][1]];
-			tmpUnit.guarding = false;
-			tmpUnit.attacked = false;
-			tmpUnit.moved = false;
-		}
-
-		this.turn = (this.turn+1)%(this.players.length);
-
-		return true;
-	};
+	
 }
+
+Game.prototype.cycleTurn = function() {
+
+	for (var i in g.UnitStorage[this.turn]) {
+		var tmpUnit = g.map[g.UnitStorage[this.turn][i].x]
+							[g.UnitStorage[this.turn][i].y].unit;
+
+
+		tmpUnit.guarding = false;
+		tmpUnit.attacked = false;
+		tmpUnit.moved = false;
+	}
+
+
+	this.turn = (this.turn+1)%(this.players.length);
+
+	return true;
+};

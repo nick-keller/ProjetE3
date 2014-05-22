@@ -3,11 +3,15 @@ function Unit(param, x, y, player) {
 	this.desc = param.desc;
 	this.longDesc = param.longDesc;
 
+	this.id = g.idCount++;
+
 	this.player = player;
 
 	this.power = param.power;
 	this.range = param.range;
 	this.defense = param.defense;
+
+	this.health = 10.0;
 
 	this.fast = param.fast;
 	this.defender = param.defender;
@@ -19,14 +23,12 @@ function Unit(param, x, y, player) {
 	this.x = x;
 	this.y = y;
 
-	this.health = 10.0;
 	this.guarding = false;
 
 	// To execute at initialization
 	g.map[this.x][this.y].unit = this;
-	g.map[this.x][this.y].empty = false;
 	// TODO: place the unit on the maps
-	g.UnitStorage[this.player].push([this.x, this.y]);
+	g.UnitStorage[this.player][this.id] = {x:this.x, y:this.y};
 
 
 	this.moved = false;
@@ -59,31 +61,25 @@ Unit.prototype.moveToCell = function(px, py) {
 	if (this.moved === true)
 		return new Error("This unit already has moved");
 
-	if (g.map[px][py].empty === false)
+	if (g.map[px][py].unit !== null)
 		return new Error("There is already an unit in the cell "+px+";"+py);
 
 	if (Math.abs(this.x-px) + Math.abs(this.y-py) > this.moveValue)
 		return new Error("Impossible to move this far");
 
-	// Update the position in UnitStorage
-	var index = g.UnitStorage[this.player].indexOf([this.x, this.y]);
-
-	if (index <= -1)
-		throw new Error("Unit to remove not found in the UnitStorage object");
-
-	g.UnitStorage[this.player][index] = [x, y];
-
 
 	var tmp = g.map[this.x][this.y].unit;
 
-	g.map[this.x][this.y].unit = {empty:true};
+	g.map[this.x][this.y].unit = null;
 	this.x = px;
 	this.y = py;
+
+	// Update the position in UnitStorage
+	g.UnitStorage[this.player][this.id] = {x:px, y:py};
 
 	// TODO: move animation
 
 	g.map[this.x][this.y].unit = tmp;
-	g.map[this.x][this.y].empty = false;
 
 	this.moved = true;
 
@@ -93,12 +89,16 @@ Unit.prototype.moveToCell = function(px, py) {
 
 
 Unit.prototype.attack = function(unitB) {
+	console.log("Unit "+this.id+" attacks unit "+unitB.id); /*Debug marker*/
 	var unitA = this;
 
 	if (unitA.player !== g.turn)
 		return new Error("This is not this unit's turn");
 
-	if (unitB.range > abs(unitB.x-unitA.x) + abs(unitB.y-unitA.y))
+	if (unitA.attacked === true)
+		return new Error("This unit already attacked");
+
+	if (unitB.range <= Math.abs(unitB.x-unitA.x) + Math.abs(unitB.y-unitA.y))
 		return new Error("Insufficient range");
 
 	if (unitB.player === unitA.player)
@@ -126,9 +126,20 @@ Unit.prototype.attack = function(unitB) {
 
 Unit.prototype.dealDamage = function(targetedUnit) {
 
-	var damage = (this.attack * this.health) /5;
+	var damage = (this.power * this.health) /5;
+
+	// Round at the 2nd decimal
+	damage = Math.round(damage * 100) / 100;
+
 
 	targetedUnit.health -= damage;
+
+	// Round at the 2nd decimal
+	targetedUnit.health = Math.round(targetedUnit.health * 100) / 100;
+	
+	console.log("Unit "+this.id+" deals "+damage+" to unit "+targetedUnit.id+
+				", has "+targetedUnit.health+"hp left" );
+
 
 	// TODO: use the defense and terrain protection
 	// TODO: attack animation
@@ -143,19 +154,13 @@ Unit.prototype.dealDamage = function(targetedUnit) {
 
 
 Unit.prototype.destroy = function() {
-	g.UnitStorage[this.player].indexOf(this);
+	console.log("Unit "+this.id+" is destroyed"); /*Debug marker*/
 
-	var index = g.UnitStorage[this.player].indexOf([this.x, this.y]);
-
-	if (index <= -1)
-		throw new Error("Unit to remove not found in the UnitStorage object");
-
-    g.UnitStorage[this.player].splice(index, 1);
+    delete g.UnitStorage[this.player][this.id];
 
     delete g.map[this.x][this.y].unit;
 
-    g.map[this.x][this.y].unit = {empty:true};
-
+    g.map[this.x][this.y].unit = null;
 
     // TODO: destroying animation
 

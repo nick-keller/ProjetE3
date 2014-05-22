@@ -19,26 +19,70 @@
             desc: "An archer",
             longDesc: "A troop of archers armed with bows."+
                         "This is the basic ranged unit.",
-            power: 1,
+            power: 3, //WTFBOOM
             range: 3,
             defense: 0,
             fast: false,
             defender: false,
             assassin: false,
             moveType: "foot",
-            moveValue: 3,
-
-            player: null
+            moveValue: 3
         };
+
 
         new Game();
 
         new Unit(bowmen, 0, 0, 0);
 
-
         new Unit(bowmen, 0, 2, 1);
 
-        console.log(g); /*Debug marker*/
+        // // Routine de test de l'attaque
+
+        // console.log("\n\n>> Unit 0 : attack unit 1");
+        // console.log(g.map[0][0].unit.attack(g.map[0][2].unit));
+
+        // console.log("\n\n>> Unit 0 : attack unit 1");
+        // console.log(g.map[0][0].unit.attack(g.map[0][2].unit));
+
+        // console.log("\n\n>> Unit 1 : attack unit 0");
+        // console.log(g.map[0][2].unit.attack(g.map[0][0].unit));
+
+        // console.log("\n\n>> cycle turns");
+        // g.cycleTurn();
+
+        // console.log("\n\n>> Unit 1 : attack unit 0");
+        // console.log(g.map[0][2].unit.attack(g.map[0][0].unit));
+
+        // console.log("\n\n>> Unit 1 : attack unit 0");
+        // console.log(g.map[0][2].unit.attack(g.map[0][0].unit));
+
+        // console.log("\n\n>> cycle turns");
+        // g.cycleTurn();
+
+        // console.log("\n\n>> Unit 1 : attack unit 0");
+        // console.log(g.map[0][2].unit.attack(g.map[0][0].unit));
+
+        // console.log("\n\n>> Unit 0 : attack unit 1");
+        // console.log(g.map[0][0].unit.attack(g.map[0][2].unit));
+
+
+
+        // // Routine de test du mouvement
+        // console.log("\n\n>> Unit 0 : move to 0;1");
+        // console.log(g.map[0][0].unit.moveToCell(0,1));
+
+        // console.log("\n\n>> Unit 0 : move to 0;0");
+        // console.log(g.map[0][1].unit.moveToCell(0,0));
+
+        // console.log("\n\n>> cycle turns");
+        // g.cycleTurn();
+
+        // console.log("\n\n>> cycle turns");
+        // g.cycleTurn();
+
+        // console.log("\n\n>> Unit 0 : move to 0;0");
+        // console.log(g.map[0][1].unit.moveToCell(0,0));
+
 
     </script>
 </html>
