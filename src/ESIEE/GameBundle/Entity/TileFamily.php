@@ -31,7 +31,7 @@ class TileFamily
     /**
      * @var Ground
      *
-     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\Ground")
+     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\Ground", inversedBy="tileFamilies")
      * @ORM\JoinColumn(name="ground_id", referencedColumnName="id")
      */
     private $ground;

@@ -27,16 +27,21 @@ $(function(){
             var $this = $(this);
 
             if($this.height() > 16){
-                var $btnMore = $('<li><i class="fa fa-ellipsis-h"></i></li>');
-                var $menuMore = $('<div></div>');
+                var $btnMore = $this.find('.more-tabs');
+                var $menuMore = $btnMore.find('.more-tabs-content');
 
-                $btnMore.addClass('more-tabs');
-                $menuMore.addClass('more-tabs-content');
+                if($btnMore.length == 0){
+                    $btnMore = $('<li><i class="fa fa-ellipsis-h"></i></li>');
+                    $menuMore = $('<div></div>');
 
-                $this.append($btnMore);
-                $btnMore.append($menuMore);
+                    $btnMore.addClass('more-tabs');
+                    $menuMore.addClass('more-tabs-content');
 
-                var $lastTab = $this.find('[data-target]').last();
+                    $this.append($btnMore);
+                    $btnMore.append($menuMore);
+                }
+
+                var $lastTab = $this.find('[data-target]:visible').last();
 
                 var minimize = function(){
                     while($this.height() > 16){

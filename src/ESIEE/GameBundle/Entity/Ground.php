@@ -35,6 +35,20 @@ class Ground
      */
     private $protection;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TileFamily", mappedBy="ground")
+     */
+    private $tileFamilies;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tileFamilies = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 
     public function __toString()
     {
@@ -89,5 +103,38 @@ class Ground
     public function getProtection()
     {
         return $this->protection;
+    }
+
+    /**
+     * Add tileFamilies
+     *
+     * @param \ESIEE\GameBundle\Entity\TileFamily $tileFamilies
+     * @return Ground
+     */
+    public function addTileFamily(\ESIEE\GameBundle\Entity\TileFamily $tileFamilies)
+    {
+        $this->tileFamilies[] = $tileFamilies;
+
+        return $this;
+    }
+
+    /**
+     * Remove tileFamilies
+     *
+     * @param \ESIEE\GameBundle\Entity\TileFamily $tileFamilies
+     */
+    public function removeTileFamily(\ESIEE\GameBundle\Entity\TileFamily $tileFamilies)
+    {
+        $this->tileFamilies->removeElement($tileFamilies);
+    }
+
+    /**
+     * Get tileFamilies
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTileFamilies()
+    {
+        return $this->tileFamilies;
     }
 }

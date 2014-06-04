@@ -14,10 +14,18 @@ var _c = {
         world: {
             w: 640,
             h: 384,
+            offset: {
+                x: 0,
+                y: 0
+            },
             grid: {
                 w: 20,
                 h: 12
             }
+        },
+        screen: {
+            w: 640,
+            h: 384
         },
         textures: {
             tiles: null
@@ -169,54 +177,76 @@ var _c = {
             var offset = _c.playground.offset();
 
             var event = {
-                x: e.pageX - offset.left,
-                y: e.pageY - offset.top,
-                grid: {
-                    x: Math.floor((e.pageX - offset.left)/32),
-                    y: Math.floor((e.pageY - offset.top)/32)
-                },
+                x: e.pageX - offset.left - _c.const.world.offset.x,
+                y: e.pageY - offset.top - _c.const.world.offset.y,
                 btn: e.which
+            };
+
+            event.grid = {
+                x: Math.floor(event.x/32),
+                y: Math.floor(event.y/32)
             };
 
             if(e.which == 1)
                 _c.mouse.clickedAt = event;
 
+            if(e.which == 2){
+                _c.const.world.offset.before = {
+                    x: _c.const.world.offset.x,
+                    y: _c.const.world.offset.y
+                };
+
+                _c.const.world.offset.clickedAt = {
+                    x: e.pageX - offset.left,
+                    y: e.pageY - offset.top
+                };
+
+                _c.playground.css('cursor', 'move');
+            }
+
             $.each(_c.callbacks.mousedown, function(i, callback){
                 callback(event);
             });
+
+            return !(e.which == 3);
         });
+
+        _c.playground[0].oncontextmenu = function() {return false;};
 
         _c.playground.mouseup(function(e){
             var offset = _c.playground.offset();
 
             var event = {
-                x: e.pageX - offset.left,
-                y: e.pageY - offset.top,
-                grid: {
-                    x: Math.floor((e.pageX - offset.left)/32),
-                    y: Math.floor((e.pageY - offset.top)/32)
-                },
+                x: e.pageX - offset.left - _c.const.world.offset.x,
+                y: e.pageY - offset.top - _c.const.world.offset.y,
                 btn: e.which,
                 clickedAt: _c.mouse.clickedAt
             };
 
-            event.min = {
-                x: Math.min(event.x, event.clickedAt.x),
-                y: Math.min(event.y, event.clickedAt.y),
-                grid: {
-                    x: Math.min(event.grid.x, event.clickedAt.grid.x),
-                    y: Math.min(event.grid.y, event.clickedAt.grid.y)
-                }
+            event.grid = {
+                x: Math.floor(event.x/32),
+                y: Math.floor(event.y/32)
             };
 
-            event.max = {
-                x: Math.max(event.x, event.clickedAt.x),
-                y: Math.max(event.y, event.clickedAt.y),
-                grid: {
-                    x: Math.max(event.grid.x, event.clickedAt.grid.x),
-                    y: Math.max(event.grid.y, event.clickedAt.grid.y)
-                }
-            };
+            if(e.which == 1){
+                event.min = {
+                    x: Math.min(event.x, event.clickedAt.x),
+                    y: Math.min(event.y, event.clickedAt.y),
+                    grid: {
+                        x: Math.min(event.grid.x, event.clickedAt.grid.x),
+                        y: Math.min(event.grid.y, event.clickedAt.grid.y)
+                    }
+                };
+
+                event.max = {
+                    x: Math.max(event.x, event.clickedAt.x),
+                    y: Math.max(event.y, event.clickedAt.y),
+                    grid: {
+                        x: Math.max(event.grid.x, event.clickedAt.grid.x),
+                        y: Math.max(event.grid.y, event.clickedAt.grid.y)
+                    }
+                };
+            }
 
             $.each(_c.callbacks.mouseup, function(i, callback){
                 callback(event);
@@ -224,20 +254,27 @@ var _c = {
 
             if(e.which == 1)
                 _c.mouse.clickedAt = null;
+
+            if(e.which == 2){
+                delete _c.const.world.offset.before;
+                delete _c.const.world.offset.clickedAt;
+                _c.playground.css('cursor', 'default');
+            }
         });
 
         _c.playground.mousemove(function(e){
             var offset = _c.playground.offset();
 
             var event = {
-                x: e.pageX - offset.left,
-                y: e.pageY - offset.top,
-                grid: {
-                    x: Math.floor((e.pageX - offset.left)/32),
-                    y: Math.floor((e.pageY - offset.top)/32)
-                },
+                x: e.pageX - offset.left - _c.const.world.offset.x,
+                y: e.pageY - offset.top - _c.const.world.offset.y,
                 mouseDown: _c.mouse.clickedAt != null,
                 clickedAt: _c.mouse.clickedAt
+            };
+
+            event.grid = {
+                x: Math.floor(event.x/32),
+                y: Math.floor(event.y/32)
             };
 
             if(event.clickedAt != null){
@@ -260,6 +297,23 @@ var _c = {
                 };
             }
 
+            if(_c.const.world.offset.before !== undefined){
+                var delta = {
+                    x:e.pageX - offset.left - _c.const.world.offset.clickedAt.x,
+                    y: e.pageY - offset.top - _c.const.world.offset.clickedAt.y
+                };
+
+                _c.const.world.offset.x = Math.max(-_c.const.world.w + _c.const.screen.w, Math.min(0, _c.const.world.offset.before.x + delta.x));
+                _c.const.world.offset.y = Math.max(-_c.const.world.h + _c.const.screen.h, Math.min(0, _c.const.world.offset.before.y + delta.y));
+
+                _c.playground.find('canvas').css({
+                    top: _c.const.world.offset.y+'px',
+                    left: _c.const.world.offset.x+'px'
+                });
+
+                _c.playground.css('background-position', (-1 + _c.const.world.offset.x) + 'px ' + (-1 + _c.const.world.offset.y) + 'px, ' +(-1 + _c.const.world.offset.x) + 'px ' + (-1 + _c.const.world.offset.y) + 'px, ' + _c.const.world.offset.x + 'px ' + _c.const.world.offset.y + 'px, ' + _c.const.world.offset.x + 'px ' + _c.const.world.offset.y + 'px');
+            }
+
             $.each(_c.callbacks.mousemove, function(i, callback){
                 callback(event);
             });
@@ -270,6 +324,34 @@ var _c = {
                 callback();
             });
         });
+    },
+
+    setSize: function(params){
+        params = _c.setDefaultParams(params, {
+            w: 20, h:12
+        });
+
+        _c.const.world = {
+            w: params.w * 32,
+            h: params.h * 32,
+            grid: {
+                w: params.w,
+                h: params.h
+            },
+            offset: _c.const.world.offset
+        };
+
+        var $canvas = _c.playground.find('canvas');
+
+        $canvas.attr({
+            width: _c.const.world.w + 'px',
+            height: _c.const.world.h + 'px'
+        });
+
+        $canvas.css({
+            width: _c.const.world.w + 'px',
+            height: _c.const.world.h + 'px'
+        })
     },
 
     mousedown: function(callback){

@@ -7,6 +7,7 @@
     <div class="playground">
         <canvas data-layer="buffer"></canvas>
         <canvas data-layer="background"></canvas>
+        <canvas data-layer="buildings"></canvas>
         <canvas data-layer="ui"></canvas>
     </div>
     <div class="menu">
@@ -16,6 +17,12 @@
             </li>
             <li data-target="ground" title="Terrain">
                 <i class="fa fa-tree"></i>
+            </li>
+            <li data-target="buildings" title="Batiments">
+                <i class="fa fa-building"></i>
+            </li>
+            <li data-target="units" title="Unités">
+                <i class="fa fa-shield"></i>
             </li>
         </ul>
         <div class="tab-content" data-container-name="main-menu">
@@ -27,36 +34,62 @@
                 </ul>
                 <div data-container-name="world-menu">
                     <div data-tab="main">
-                        nom
-                        type
-                        taille
+                        <div class="form-row">
+                            <label for="name">
+                                Nom
+                            </label>
+                            <input type="text" name="name" id="name">
+                        </div>
+
+                        <div class="form-row">
+                            <label>
+                                Taille
+                            </label>
+                            <div class="select" data-width="min">
+                                <input type="hidden" id="input-map-size">
+                                <span class="val"></span>
+                                <i class="fa fa-sort"></i>
+                                <div class="options">
+                                    <div class="option" data-value="20,12">Pettite</div>
+                                    <div class="option" data-value="30,18">Moyenne</div>
+                                    <div class="option" data-value="40,24">Grande</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>
+                            nom
+                            type
+                            taille
+                        </p>
                     </div>
                 </div>
             </div>
             <div data-tab="ground">
-                <ul class="tabs" data-tab-container="ground-menu">
-                    {% for family in tileFamily %}
-                        <li data-target="{{ family.id }}">
-                            {{ family }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <div data-container-name="ground-menu">
-                    {% for family in tileFamily %}
-                        <div data-tab="{{ family.id }}">
-                            <div class="tile auto" data-family="{{ family.id }}" data-id="0">
-                                <i class="fa fa-magic"></i>
+                {% for ground in grounds %}
+                    <ul class="tabs" data-tab-container="ground-{{ ground.id }}">
+                        {% for family in ground.tileFamilies %}
+                            <li data-target="{{ family.id }}">
+                                {{ family }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div data-container-name="ground-{{ ground.id }}">
+                        {% for family in ground.tileFamilies %}
+                            <div data-tab="{{ family.id }}">
+                                <div class="tile auto" data-family="{{ family.id }}" data-id="0">
+                                    <i class="fa fa-magic"></i>
+                                </div>
+                                {% for tile in family.tiles %}
+                                    <div
+                                            class="tile tile-{{ tile.coordX }}-{{ tile.coordY }}"
+                                            data-id="{{ tile.id }}"
+                                            data-family="{{ family.id }}"
+                                    ></div>
+                                {% endfor %}
                             </div>
-                            {% for tile in family.tiles %}
-                                <div
-                                        class="tile tile-{{ tile.coordX }}-{{ tile.coordY }}"
-                                        data-id="{{ tile.id }}"
-                                        data-family="{{ family.id }}"
-                                ></div>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

@@ -1,3 +1,5 @@
+@import "mixins";
+
 @width: 640px;
 @height: 384px;
 
@@ -6,6 +8,7 @@
         width: @width;
         height: @height;
         position: absolute;
+        overflow: hidden;
 
         background-color:#269;
         background-image: linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
@@ -82,16 +85,28 @@
         }
 
         > .tab-content{
-            margin: 1px 1px 0 40px;
+//            margin: 1px 1px 0 40px;
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            bottom: 1px;
+            left: 40px;
+            overflow: auto;
 
-            background: #535353;
-            border: solid 1px #282828;
             color: white;
             text-shadow: 0 -1px #404040;
 
             [data-tab]{
                 display: none;
-                padding: 0 2px 2px 2px;
+
+                [data-container-name]{
+                    padding: 2px;
+                    margin-bottom: 2px;
+
+                    background: #535353;
+                    border: solid 1px #282828;
+                    border-top: none;
+                }
 
                 .tile{
                     position: relative;
@@ -135,14 +150,13 @@
             }
 
             .tabs{
-                margin: 0 0 4px 0;
                 padding: 0;
                 list-style: none;
                 font-size: 0;
 
                 color: #e1e1e1;
                 background: #3b3b3b;
-                border-bottom: solid 1px #282828;
+                border: solid 1px #282828;
                 box-shadow: 0 1px #4a4a4a inset, 0 1px #6a6a6a;
 
                 li{
@@ -179,7 +193,7 @@
                         .more-tabs-content{
                             position: absolute;
                             z-index: 1000;
-                            left: 0;
+                            right: 0;
                             top: 100%;
                             padding: 2px;
                             display: none;
@@ -207,5 +221,97 @@
                 }
             }
         }
+
+        input{
+            padding: 0 3px;
+            height: 16px;
+            line-height: 16px;
+            margin-bottom: 2px;
+
+            background: #3a3a3a;
+            border: solid 1px #303030;
+            color: white;
+            box-shadow: 0 1px #696969;
+
+            &:focus{
+                box-shadow: 0 0 0 1px #506fac, 0 1px 1px rgba(0,0,0,.2) inset;
+                background: white;
+                color: black;
+            }
+        }
+
+        .select{
+            position: relative;
+            margin-bottom: 2px;
+            .not-selectable();
+            cursor: default;
+            .btn();
+            padding-right: 13px;
+
+            .options{
+                position: absolute;
+                padding: 2px;
+                visibility: hidden;
+                opacity: 0;
+                left: 0;
+                right: 0;
+                top: 0;
+                .transition(~"top .2s, opacity .2s");
+
+                background: #606060;
+                border: solid 1px #3a3a3a;
+                box-shadow: 0 0 0 1px #636363 inset;
+
+                .option{
+                    &:hover{
+                        background: #6d7d92;
+                    }
+                }
+            }
+
+            &.active{
+                .options{
+                    top: 100%;
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
+
+            .fa-sort{
+                position: absolute;
+                right: 4px;
+                font-size: 10px;
+                top: 50%;
+                margin-top: -4px;
+            }
+
+            &.active{
+                .btn-down();
+                padding-right: 13px;
+            }
+        }
+
+        .form-row{
+            input, .select{
+                float: right;
+            }
+        }
     }
+}
+
+.btn(){
+    padding: 0 3px;
+    border: solid 1px #303030;
+    border-radius: 2px;
+    color: #e0e0e0;
+    text-shadow: 0 -1px #232323;
+    background: #757575;
+    box-shadow: 0 1px #919191 inset, 0 1px #6a6a6a;
+}
+
+.btn-down(){
+    .btn();
+    border-color: #272727;
+    background: #3f3f3f;
+    box-shadow: 0 1px #333333 inset, 0 1px #6a6a6a;
 }

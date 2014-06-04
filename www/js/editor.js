@@ -15,14 +15,20 @@ $(function(){
 
     var $menu = $('.map-editor .menu');
 
-    for(var i=0; i<20; ++i){
-        _e.map.family.push([]);
-        _e.map.tile.push([]);
-        for(var j=0; j<12; ++j){
-            _e.map.family[i].push(0);
-            _e.map.tile[i].push(0);
+    $('#input-map-size').change(function(){
+        var val = $(this).val().split(",");
+
+        _c.setSize({w:val[0], h:val[1]});
+
+        for(var i=0; i<_c.const.world.grid.w; ++i){
+            _e.map.family.push([]);
+            _e.map.tile.push([]);
+            for(var j=0; j<_c.const.world.grid.h; ++j){
+                _e.map.family[i].push(0);
+                _e.map.tile[i].push(0);
+            }
         }
-    }
+    }).change();
 
     $menu.find('.tile').click(function(){
         var $this = $(this);
@@ -65,7 +71,7 @@ $(function(){
 
     _c.mouseup(function(e){
 
-        if(_e.current.editorMode == 'ground'){
+        if(_e.current.editorMode == 'ground' && e.btn == 1){
 
             _c.layers.clearLayer(_c.layers.ui);
             _c.layers.clearBuffer();
@@ -197,4 +203,19 @@ $(function(){
             _c.layers.clearLayer(_c.layers.ui);
         }
     });
+
+    _c.mousedown(function(e){
+
+        if(_e.current.editorMode == 'ground'){
+
+            if(e.btn == 3){
+                if(_e.current.tile == 0){
+                    _e.current.tileFamily = _e.map.family[e.grid.x][e.grid.y];
+                }
+                else{
+                    _e.current.tile = _e.map.tile[e.grid.x][e.grid.y];
+                }
+            }
+        }
+    })
 });
