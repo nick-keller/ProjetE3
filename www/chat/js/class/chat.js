@@ -44,7 +44,30 @@ Chat.prototype.initiate = function(param) {
       throw new Error("VIDEO_ERROR");
     c.localStream = stream;
 
-    c.peerConnection = new peerConnection();
+    c.peerConnection = new peerConnection({ "iceServers": [
+                      {url:'stun:stun.services.mozilla.com'},
+                      {url:'stun:stun.l.google.com:19302'},
+                      {url:'stun:stun1.l.google.com:19302'},
+                      {url:'stun:stun2.l.google.com:19302'},
+                      {url:'stun:stun3.l.google.com:19302'},
+                      {url:'stun:stun4.l.google.com:19302'},
+                      // {
+                      //     url: 'turn:numb.viagenie.ca',
+                      //     credential: 'muazkh',
+                      //     username: 'webrtc@live.com'
+                      // },
+                      // {
+                      //     url: 'turn:192.158.29.39:3478?transport=udp',
+                      //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                      //     username: '28224511:1379330808'
+                      // },
+                      // {
+                      //     url: 'turn:192.158.29.39:3478?transport=tcp',
+                      //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                      //     username: '28224511:1379330808'
+                      // }
+      ]});
+    
     c.peerConnection.addStream(c.localStream);
     c.peerConnection.onaddstream = function(event) {
       c.remoteStream = event.stream;
@@ -222,19 +245,19 @@ Chat.prototype.localTest = function() {
                             "waiting for onAddStream calls...");
                 pc1.setRemoteDescription(new sessionDescription(descA),
                                           function(){
+                  if (browser === "mozilla") {
+                    console.log("pc1: "+
+                                  occurrences(descO.sdp,"typ host")+
+                                  " host candidates and "+
+                                  occurrences(descO.sdp,"typ srflx")+
+                                  " srflx candidates");
 
-                  console.log("pc1: "+
-                                occurrences(descO.sdp,"typ host")+
-                                " host candidates and "+
-                                occurrences(descO.sdp,"typ srflx")+
-                                " srflx candidates");
-
-                  console.log("pc2: "+
-                                occurrences(descA.sdp,"typ host")+
-                                " host candidates and "+
-                                occurrences(descA.sdp,"typ srflx")+
-                                " srflx candidates");
-
+                    console.log("pc2: "+
+                                  occurrences(descA.sdp,"typ host")+
+                                  " host candidates and "+
+                                  occurrences(descA.sdp,"typ srflx")+
+                                  " srflx candidates");
+                  }
 
                 },c.handleError);
               },c.handleError);

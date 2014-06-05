@@ -1,46 +1,45 @@
+<document>
 {
-	0: {
-		name: "Footmen",
-		desc: "A simple footmen",
-		longDesc: "A troop of simple footmens armed with spikes."+
-					"This is the most basic unit.",
-		power: 1,
-		range: 1,
-		defense: 1,
-		fast: false,
-		defender: false,
-		assassin: false,
-		moveType: "foot",
-		moveValue: 3
+	"0": {
+		"name": "Footmen",
+		"desc": "A simple footmen",
+		"longDesc": "A troop of simple footmens armed with spikes. This is the most basic unit.",
+		"power": 1,
+		"range": 1,
+		"defense": 1,
+		"fast": false,
+		"defender": false,
+		"assassin": false,
+		"moveType": "foot",
+		"moveValue": 3
 	},
 
-	1: {
-		name: "Bowmen",
-		desc: "An archer",
-		longDesc: "A troop of archers armed with bows."+
-					"This is the basic ranged unit.",
-		power: 1,
-		range: 3,
-		defense: 0,
-		fast: false,
-		defender: false,
-		assassin: false,
-		moveType: "foot",
-		moveValue: 3
+	"1": {
+		"name": "Bowmen",
+		"desc": "An archer",
+		"longDesc": "A troop of archers armed with bows. This is the basic ranged unit.",
+		"power": 1,
+		"range": 3,
+		"defense": 0,
+		"fast": false,
+		"defender": false,
+		"assassin": false,
+		"moveType": "foot",
+		"moveValue": 3
 	},
 
-	2: {
-		name: "Horsemen",
-		desc: "A simple horsemen",
-		longDesc: "A troop of horsemens armed with spikes."+
-					"This is the basic mounted unit unit.",
-		power: 2,
-		range: 1,
-		defense: 1,
-		fast: true,
-		defender: false,
-		assassin: false,
-		moveType: "mounted",
-		moveValue: 6
+	"2": {
+		"name": "Horsemen",
+		"desc": "A simple horsemen",
+		"longDesc": "A troop of horsemens armed with spikes.3 This is the basic mounted unit unit.",
+		"power": 2,
+		"range": 1,
+		"defense": 1,
+		"fast": true,
+		"defender": false,
+		"assassin": false,
+		"moveType": "mounted",
+		"moveValue": 6
 	}
 }
+</document>

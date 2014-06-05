@@ -32,8 +32,8 @@ function Game(pMap, pPlayers) {
 Game.prototype.cycleTurn = function() {
 
 	for (var i in g.UnitStorage[this.turn]) {
-		var tmpUnit = g.map[g.UnitStorage[this.turn][i].x]
-							[g.UnitStorage[this.turn][i].y].unit;
+		var tmpUnit = this.map[g.UnitStorage[this.turn][i].x]
+							[this.UnitStorage[this.turn][i].y].unit;
 
 
 		tmpUnit.guarding = false;
@@ -45,4 +45,10 @@ Game.prototype.cycleTurn = function() {
 	this.turn = (this.turn+1)%(this.players.length);
 
 	return true;
+};
+
+
+Game.prototype.getUnitById = function(id, player) {
+	var obj = this.UnitStorage[player][id];
+	return this.map[obj.x][obj.y].unit;
 };

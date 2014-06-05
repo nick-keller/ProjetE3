@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Mocha Tests</title>
+		<link rel="stylesheet" href="../lib/mocha.css" />
+	</head>
+	<body>
+		
+		<div id="mocha"></div>
+		<div id="messages"></div>
+		<div id="fixtures"></div>
+		
+		<div id="base" hidden></div>
+		
+		
+		<script src="../lib/jQuery.min.js"></script>
+		<script src="../lib/chai.min.js"></script>
+		<script src="../lib/mocha.min.js"></script>
+		<script src="../lib/sinon.min.js"></script>
+
+		<script src="js/class/Game.js"></script>
+		<script src="js/class/Unit.js"></script>
+
+		<script>mocha.setup('bdd')</script>
+		<script src="js/mocha.game.js"></script>
+		<script>mocha.run()</script>
+	</body>
+</html>
