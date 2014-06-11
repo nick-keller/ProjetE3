@@ -91,6 +91,20 @@
                     </div>
                 {% endfor %}
             </div>
+            <div data-tab="buildings">
+                <ul class="tabs" data-tab-container="buildings-menu">
+                    <li data-target="main">
+                        Bâtiments
+                    </li>
+                </ul>
+                <div data-container-name="buildings-menu">
+                    <div data-tab="main">
+                        {% for building in buildings %}
+                            <div class="building building-{{ building.coordX }}-{{ building.coordY }}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

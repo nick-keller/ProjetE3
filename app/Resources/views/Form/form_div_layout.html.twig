@@ -108,3 +108,47 @@
         {% endfor %}
     </div>
 {% endblock %}
+
+{% block buildingselector_widget %}
+    {% set tile = form.vars.sonata_admin.admin.subject %}
+    {% set val = tile.coordX~'-'~tile.coordY %}
+    <style scoped="scoped">
+        .tile-selector{
+            background: url('{{ asset('spritesheet/buildings.png') }}') #1e1e1e;
+            width: 256px;
+            height: 256px;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .tile-selector label{
+            display: inline-block;
+            width: 16px;
+            height: 32px;
+            margin: 0;
+            cursor: pointer;
+            box-shadow: 0 0 0 1px rgba(255,255,255,.1);
+        }
+
+        .tile-selector label:hover{
+            box-shadow: 0 0 0 1px white;
+        }
+
+        .tile-selector .iradio_minimal{
+            display: none;
+        }
+
+        .tile-selector .iradio_minimal.checked + label{
+            box-shadow: 0 0 0 1px white;
+            background: rgba(255,255,255,.5);
+        }
+    </style>
+    <div class="tile-selector">
+        {% for j in 0..7 %}
+            {% for i in 0..15 %}
+                <input id="{{ i~'-'~j }}" type="radio" name="{{ form.vars.full_name }}" value="{{ i~'-'~j }}" {% if val == i~'-'~j %}checked{% endif %}>
+                <label for="{{ i~'-'~j }}"></label>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}

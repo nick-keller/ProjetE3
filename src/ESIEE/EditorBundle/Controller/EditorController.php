@@ -21,6 +21,7 @@ class EditorController extends Controller
         return array(
             'tileFamily' => $this->em->getRepository('ESIEEGameBundle:TileFamily')->findAll(),
             'grounds' => $this->em->getRepository('ESIEEGameBundle:Ground')->findAll(),
+            'buildings' => $this->em->getRepository('ESIEEGameBundle:Building')->findAll(),
             'tileFamilySimple' => $this->em->getRepository('ESIEEGameBundle:TileFamily')->findAllSimple(),
             'tilesSimple' => $this->em->getRepository('ESIEEGameBundle:Tile')->findAllSimple(),
         );

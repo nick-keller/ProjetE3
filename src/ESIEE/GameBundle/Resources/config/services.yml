@@ -12,6 +12,11 @@ services:
         tags:
             - { name: form.type, alias: tileselector }
 
+    game.form.type.buildingselector:
+        class: ESIEE\GameBundle\Form\Type\BuildingSelectorType
+        tags:
+            - { name: form.type, alias: buildingselector }
+
     sonata.admin.ground:
         class: ESIEE\GameBundle\Admin\GroundAdmin
         arguments:
@@ -20,6 +25,16 @@ services:
             - ~
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: Terrains }
+
+
+    sonata.admin.buildingtype:
+        class: ESIEE\GameBundle\Admin\BuildingAdmin
+        arguments:
+            - ~
+            - ESIEE\GameBundle\Entity\Building
+            - ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Elements de jeu", label: "Bâtiment" }
 
 
     sonata.admin.unittype:
