@@ -11,7 +11,7 @@
         .j-loop (@j) when (@j > 0) {
             @x = @i - 1;
             @y = @j - 1;
-            &.tile-@{x}-@{y} {background-position: -@x * 32px -@y * 64px;}
+            &.building-@{x}-@{y} {background-position: -@x * 32px -@y * 64px;}
 
             .j-loop(@j - 1);
         }

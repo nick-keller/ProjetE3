@@ -127,6 +127,24 @@ var _c = {
             tile = tile[0];
 
             params.layer.drawImage(_c.const.textures.tiles, tile.x * 32, tile.y * 32, 32, 32, params.x * 32,  params.y * 32, 32, 32);
+        },
+
+        drawBuilding: function(params){
+            params = _c.setDefaultParams(params, {
+                layer: _c.layers.buffer,
+                buildingId: 1,
+                x: 0, y: 0
+            });
+
+            //http://localhost/ProjetE3/www/spritesheet/buildingsx2.png
+            var building = _c.const.data.buildings.filter(function(e){
+                return e.id == params.buildingId;
+            });
+
+            if(building.length != 1) return;
+            building = building[0];
+
+            params.layer.drawImage(_c.const.textures.buildings, building.x * 32, building.y * 64, 32, 64, params.x * 32,  params.y * 32-32, 32, 64);
         }
     },
 
@@ -137,7 +155,8 @@ var _c = {
         mousedown: [],
         mousemove: [],
         mouseup: [],
-        mouseout: []
+        mouseout: [],
+        render: []
     },
 
     mouse: {
@@ -155,8 +174,11 @@ var _c = {
     init: function(playground){
         _c.const.textures.tiles = new Image();
         _c.const.textures.tiles.src = 'http://localhost/ProjetE3/www/spritesheet/tilesx2.png';
+        _c.const.textures.buildings = new Image();
+        _c.const.textures.buildings.src = 'http://localhost/ProjetE3/www/spritesheet/buildingsx2.png';
         _c.const.data.tiles = tiles;
         _c.const.data.tileFamily = tileFamily;
+        _c.const.data.buildings = buildings;
 
         _c.playground = playground;
         var $canvas = _c.playground.find('canvas');
@@ -324,6 +346,22 @@ var _c = {
                 callback();
             });
         });
+
+        var render = function(){
+            $.each(_c.callbacks.render, function(i, callback){
+                var time = new Date().getMilliseconds() / 1000;
+
+                var event = {
+                    loop: time,
+                    halfLoop: Math.cos(time*6.28)/2+0.5
+                };
+
+                callback(event);
+            });
+            window.requestAnimFrame(render);
+        };
+
+        render();
     },
 
     setSize: function(params){
@@ -354,25 +392,61 @@ var _c = {
         })
     },
 
+    /**
+     * add a callback when a mouse btn is pushed down
+     * 1: btn left
+     * 2: btn midle
+     * 3: btn right
+     * event passed to callback:
+     * {x, y, grid:{x, y}, (int) btn}
+     * @param callback the callback method
+     */
     mousedown: function(callback){
         _c.callbacks.mousedown.push(callback);
     },
 
     /**
      * add a callback when the mouse moves over the playground
-     * {x, y, grid:{x, y}, mouseDown, clickedAt, min, max}
+     * event passed to callback:
+     * {x, y, grid:{x, y}, (bool) mouseDown, (point) clickedAt, (point) min, (point) max}
      * @param callback the callback method
      */
     mousemove: function(callback){
         _c.callbacks.mousemove.push(callback);
     },
 
+    /**
+     * add a callback when a mouse btn is released
+     * 1: btn left
+     * 2: btn midle
+     * 3: btn right
+     * event passed to callback:
+     * {x, y, grid:{x, y}, (int) btn, (point) clickedAt, (point) min, (point) max}
+     * @param callback the callback method
+     */
     mouseup: function(callback){
         _c.callbacks.mouseup.push(callback);
     },
 
+    /**
+     * add a callback when a mouse leaves the playground
+     * no event is passed
+     * @param callback the callback method
+     */
     mouseout: function(callback){
         _c.callbacks.mouseout.push(callback);
+    },
+
+    /**
+     * add a callback to the render pipeline. The callback will be called each time a new frame is calculated.
+     * event passed to callback:
+     * {(float) loop, (float) halfLoop}
+     * loop: goes from 0 to 1 in 1 sec and instantly goes back to 0.
+     * halfLoop: goes from 0 to 1 in 0.5 sec and goes back to 0 in 0.5 sec.
+     * @param callback the callback method
+     */
+    render: function(callback){
+        _c.callbacks.render.push(callback);
     },
 
     /**

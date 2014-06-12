@@ -3,6 +3,7 @@
 namespace ESIEE\GameBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * BuildingRepository
@@ -12,4 +13,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class BuildingRepository extends EntityRepository
 {
+    public function findAll()
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b.id, b.name, b.coordX x, b.coordY y')
+            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }

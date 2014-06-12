@@ -3,11 +3,13 @@ $(function(){
         current: {
             editorMode: null,
             tile: 1,
-            tileFamily: 1
+            tileFamily: 1,
+            building: 1
         },
         map: {
             family: [],
-            tile: []
+            tile: [],
+            building: []
         }
     };
 
@@ -19,13 +21,20 @@ $(function(){
         var val = $(this).val().split(",");
 
         _c.setSize({w:val[0], h:val[1]});
+        _e.map = {
+            family: [],
+            tile: [],
+            building: []
+        };
 
         for(var i=0; i<_c.const.world.grid.w; ++i){
             _e.map.family.push([]);
             _e.map.tile.push([]);
+            _e.map.building.push([]);
             for(var j=0; j<_c.const.world.grid.h; ++j){
                 _e.map.family[i].push(0);
                 _e.map.tile[i].push(0);
+                _e.map.building[i].push(0);
             }
         }
     }).change();
@@ -37,6 +46,14 @@ $(function(){
 
         _e.current.tile = $this.data('id');
         _e.current.tileFamily = $this.data('family');
+    });
+
+    $menu.find('.building').click(function(){
+        var $this = $(this);
+        $menu.find('.building').removeClass('active');
+        $this.addClass('active');
+
+        _e.current.building = $this.data('id');
     });
 
     $menu.find('[data-tab-container="main-menu"] [data-target]').click(function(){
@@ -65,6 +82,32 @@ $(function(){
                     stroke: 'rgba(0,255,0,.7)'
                 });
             }
+            _c.layers.blitBuffer(_c.layers.ui, true);
+        }
+
+        if(_e.current.editorMode == 'buildings'){
+            _c.layers.clearBuffer();
+
+            if(_e.map.building[e.grid.x][e.grid.y] == 0){
+                _c.layers.drawRect({
+                    x: e.grid.x *32, y: e.grid.y *32, w: 32, h: 32,
+                    fill: 'rgba(0,255,0,.3)',
+                    stroke: 'rgba(0,255,0,.7)'
+                });
+
+                _c.layers.drawBuilding({
+                    x: e.grid.x, y: e.grid.y,
+                    buildingId: _e.current.building
+                });
+            }
+            else{
+                _c.layers.drawRect({
+                    x: e.grid.x *32, y: e.grid.y *32, w: 32, h: 32,
+                    fill: 'rgba(255,0,0,.3)',
+                    stroke: 'rgba(255,0,0,.7)'
+                });
+            }
+
             _c.layers.blitBuffer(_c.layers.ui, true);
         }
     });
@@ -194,11 +237,12 @@ $(function(){
             }
             _c.layers.blitBuffer(_c.layers.background);
         }
+
     });
 
     _c.mouseout(function(){
 
-        if(_e.current.editorMode == 'ground'){
+        if(_e.current.editorMode == 'ground' || _e.current.editorMode == 'buildings'){
 
             _c.layers.clearLayer(_c.layers.ui);
         }
@@ -217,5 +261,52 @@ $(function(){
                 }
             }
         }
-    })
+
+        if(_e.current.editorMode == 'buildings'){
+
+            if(e.btn == 3){
+                _e.current.building = _e.map.building[e.grid.x][e.grid.y];
+            }
+
+            if(e.btn == 1){
+                var drawBuilding = function(x, y){
+                    do{
+                        _c.layers.drawBuilding({
+                            x: x, y: y,
+                            buildingId: _e.map.building[x][y]
+                        });
+                        y++;
+                    }while(y < _c.const.world.grid.h && _e.map.building[x][y] > 0);
+                };
+
+                if(_e.map.building[e.grid.x][e.grid.y] != 0){
+                    if(_e.current.building != 0) return;
+                    _c.layers.clearBuffer();
+
+                    _e.map.building[e.grid.x][e.grid.y] = 0;
+
+                    if(e.grid.y > 0)
+                        _c.layers.drawBuilding({
+                            x: e.grid.x, y: e.grid.y - 1,
+                            buildingId: _e.map.building[e.grid.x][e.grid.y - 1]
+                        });
+
+                    if(e.grid.y < _c.const.world.grid.h)
+                        drawBuilding(e.grid.x, e.grid.y+1);
+
+                    _c.layers.buildings.clearRect(32*e.grid.x, 32*e.grid.y - 32, 32, 64);
+                    _c.layers.blitBuffer(_c.layers.buildings);
+                }
+                else{
+                    _c.layers.clearLayer(_c.layers.ui);
+                    _c.layers.clearBuffer();
+
+                    _e.map.building[e.grid.x][e.grid.y] = _e.current.building;
+                    drawBuilding(e.grid.x, e.grid.y);
+
+                    _c.layers.blitBuffer(_c.layers.buildings);
+                }
+            }
+        }
+    });
 });

@@ -1,6 +1,7 @@
 <script type="text/javascript">
     var tileFamily = {{ tileFamilySimple|json_encode|raw }};
     var tiles = {{ tilesSimple|json_encode|raw }};
+    var buildings = {{ buildings|json_encode|raw }};
 </script>
 
 <div class="map-editor">
@@ -99,8 +100,14 @@
                 </ul>
                 <div data-container-name="buildings-menu">
                     <div data-tab="main">
+                        <div class="building erase" data-id="0">
+                            <i class="fa fa-eraser"></i>
+                        </div>
                         {% for building in buildings %}
-                            <div class="building building-{{ building.coordX }}-{{ building.coordY }}"></div>
+                            <div
+                                class="building building-{{ building.x }}-{{ building.y }}"
+                                data-id="{{ building.id }}"
+                            ></div>
                         {% endfor %}
                     </div>
                 </div>
