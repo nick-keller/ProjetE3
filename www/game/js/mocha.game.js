@@ -21,12 +21,12 @@ describe('Verify the classes initialisation and structure', function() {
   it('Class game.js', function(done) {
 
     new Game();
-    expect(g).to.be.an('Object');
-    expect(g.idCount).to.be.a('Number');
-    expect(g.players).to.be.an('Array');
-    expect(g.map[0]).to.be.an('Array');
-    expect(g.UnitStorage).to.be.an('Object');
-    expect(g.turn).to.be.a('Number');
+    expect(_g).to.be.an('Object');
+    expect(_g.idCount).to.be.a('Number');
+    expect(_g.players).to.be.an('Array');
+    expect(_g.map[0]).to.be.an('Array');
+    expect(_g.unitStorage).to.be.an('Object');
+    expect(_g.turn).to.be.a('Number');
     done();
 
   });
@@ -84,43 +84,43 @@ describe('Testing routine of the game side of the application', function(done) {
     // Starting the attack routine
 
 
-    expect(g.getUnitById(0,0).attack(g.getUnitById(1,1))).to.be.true;
+    expect(_g.getUnitById(0,1).attack(_g.getUnitById(1,2))).to.be.false;
     // We expect no error here.
 
 
-    expect(g.getUnitById(0,0).attack(g.getUnitById(1,1)).message).to.be.a('String');
+    expect(_g.getUnitById(0,1).attack(_g.getUnitById(1,2)).message).to.be.a('String');
     // The unit already attacked this turn.
 
 
-    expect(g.getUnitById(1,1).attack(g.getUnitById(0,0)).message).to.be.a('String');
+    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1)).message).to.be.a('String');
     // This is not this unit's turn.
 
 
-    g.cycleTurn();
+    _g.cycleTurn();
 
-    expect(g.turn).to.equal(1);
+    expect(_g.turn).to.equal(1);
     // We verify the turn have cycled.
 
 
-    expect(g.getUnitById(1,1).attack(g.getUnitById(0,0))).to.be.true;
+    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1))).to.be.false;
     // We expect no error here.
 
 
-    expect(g.getUnitById(1,1).attack(g.getUnitById(0,0)).message).to.be.a('String');
+    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1)).message).to.be.a('String');
     // The unit already attacked this turn.
 
 
-    g.cycleTurn();
+    _g.cycleTurn();
 
-    expect(g.turn).to.equal(0);
+    expect(_g.turn).to.equal(0);
     // We verify the turn have cycled.
 
 
-    expect(g.getUnitById(1,1).attack(g.getUnitById(0,0)).message).to.be.a('String');
+    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1)).message).to.be.a('String');
     // This is not this unit's turn.
 
 
-    expect(g.getUnitById(0,0).attack(g.getUnitById(1,1))).to.be.true;
+    expect(_g.getUnitById(0,1).attack(_g.getUnitById(1,2))).to.be.false;
     // We expect no error here.
 
 
@@ -134,27 +134,38 @@ describe('Testing routine of the game side of the application', function(done) {
     // Starting the movement routine
 
 
-    expect(g.getUnitById(0,0).moveToCell(0,1)).to.be.true;
+    expect(_g.getUnitById(0,1).moveToCell(0,1)).to.be.false;
     // We expect no error here.
 
 
-    expect(g.getUnitById(1,1).moveToCell(0,0).message).to.be.a('String');
+    expect(_g.getUnitById(1,2).moveToCell(0,0).message).to.be.a('String');
     // This is not this unit's turn.
 
 
-    g.cycleTurn();
+    _g.cycleTurn();
 
-    expect(g.turn).to.equal(1);
+    expect(_g.turn).to.equal(1);
     // We verify the turn have cycled.
 
 
-    expect(g.getUnitById(1,1).moveToCell(0,1).message).to.be.a('String');
+    expect(_g.getUnitById(1,2).moveToCell(0,1).message).to.be.a('String');
     // There already is a unit in this cell.
 
 
-    expect(g.getUnitById(1,1).moveToCell(0,0)).to.be.true;
+    expect(_g.getUnitById(1,2).moveToCell(0,0)).to.be.false;
     // We expect no error here.
 
+
+    // var cells = _g.getUnitById(0,1).getMoveableCells();
+
+    // expect(cells).to.be.an('Array');
+
+    // expect(cells.length).to.be.equal(8);
+
+    // expect(cells[0]).to.be.an('Object');
+
+    // expect(cells[0].x).to.be.a('Number');
+    // // Should be an array of 8 objects
 
     done();
 

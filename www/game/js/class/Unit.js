@@ -3,7 +3,7 @@ function Unit(param, x, y, player) {
 	this.desc = param.desc;
 	this.longDesc = param.longDesc;
 
-	this.id = g.idCount++;
+	this.id = _g.idCount++;
 
 	this.player = player;
 
@@ -26,9 +26,11 @@ function Unit(param, x, y, player) {
 	this.guarding = false;
 
 	// To execute at initialization
-	g.map[this.x][this.y].unit = this;
-	// TODO: place the unit on the maps
-	g.UnitStorage[this.player][this.id] = {x:this.x, y:this.y};
+	_g.map[this.x][this.y].unit = this;
+	
+	// TODO: activate
+	// _gr.addUnit(this.id);
+	_g.unitStorage[this.player][this.id] = {x:this.x, y:this.y};
 
 
 	this.moved = false;
@@ -46,123 +48,205 @@ Unit.prototype.guard = function() {
 	this.guarding = true;
 	this.attacked = true;
 	this.moved = true;
-	return true;
+	return false;
 };
 
 
-Unit.prototype.moveToCell = function(px, py) {
+Unit.prototype.getMoveableCells = function() {
+	var unit = this;
+	var maxX = _g.map.length;
+	var maxY = _g.map[0].length;
 
-	// TODO: take in account move factor and enemy units.
-	// TODO: take in account the "fast" attribute
+	var size = Math.pow(10, Math.max(
+					maxX.toString().length,
+					maxY.toString().length
+					)+1);
+	var cells = {};
 
-	if (this.player !== g.turn)
+
+	(function loop (x, y, remaining){
+		if (x>=maxX || y>=maxY || x<0 || y<0)
+			return;
+
+		var tmpRemain = remaining-_g.map[x][y].terrain.moveFactor[unit.moveType];
+
+		if (_g.map[x][y].unit !== null) 
+			if (_g.map[x][y].unit.player !== _g.turn)
+				return;
+
+		if (tmpRemain < 0)
+			return;
+
+		if (cells[x*size+y]>=tmpRemain)
+			return;
+
+		cells[x*size+y] = tmpRemain;
+
+		loop(x, y+1, tmpRemain);
+		loop(x, y-1, tmpRemain);
+		loop(x+1, y, tmpRemain);
+		loop(x-1, y, tmpRemain);
+
+	})(unit.x, unit.y, unit.moveValue);
+
+	cells.fact = size;
+
+	return cells;
+};
+
+
+Unit.prototype.moveToCell = function(px, py, mc) {
+
+	if (this.player !== _g.turn)
 		return new Error("This is not this unit's turn");
 
 	if (this.moved === true)
 		return new Error("This unit already has moved");
 
-	if (g.map[px][py].unit !== null)
+	if (_g.map[px][py].unit !== null)
 		return new Error("There is already an unit in the cell "+px+";"+py);
 
 	if (Math.abs(this.x-px) + Math.abs(this.y-py) > this.moveValue)
 		return new Error("Impossible to move this far");
 
+	var path = [];
 
-	var tmp = g.map[this.x][this.y].unit;
+	var x = px;
+	var y = py;
+	var remaining = mc[x*mc.fact+y];
 
-	g.map[this.x][this.y].unit = null;
+	while (x !== this.x && y !== this.y) {
+		path.unshift({x:y, y:x});
+
+		var cost = _g.map[x][y].terrain.moveFactor[this.moveType];
+		if (mc[x*mc.fact+y-1] + cost === remaining) {
+			y--;
+			continue;
+		}
+
+		if (mc[x*mc.fact+y+1] + cost === remaining) {
+			y++;
+			continue;
+		}
+
+		if (mc[x*mc.fact+y-1*mc.fact] + cost === remaining) {
+			x--;
+			continue;
+		}
+
+		if (mc[x*mc.fact+y+1*mc.fact] + cost === remaining) {
+			x++;
+			continue;
+		}
+	}
+
+	_gr.moveUnit(this.x, this.y, path);
+
+	var tmp = _g.map[this.x][this.y].unit;
+
+	_g.map[this.x][this.y].unit = null;
 	this.x = px;
 	this.y = py;
 
-	// Update the position in UnitStorage
-	g.UnitStorage[this.player][this.id] = {x:px, y:py};
+	// Update the position in unitStorage
+	_g.unitStorage[this.player][this.id] = {x:px, y:py};
 
-	// TODO: move animation
-
-	g.map[this.x][this.y].unit = tmp;
+	_g.map[this.x][this.y].unit = tmp;
 
 	this.moved = true;
 
-	return true;
+	return false;
 }; // moveToCell
 
 
 
 Unit.prototype.attack = function(unitB) {
-	console.log("Unit "+this.id+" attacks unit "+unitB.id); /*Debug marker*/
 	var unitA = this;
 
-	if (unitA.player !== g.turn)
+	if (unitA.player !== _g.turn)
 		return new Error("This is not this unit's turn");
 
 	if (unitA.attacked === true)
 		return new Error("This unit already attacked");
 
-	if (unitB.range <= Math.abs(unitB.x-unitA.x) + Math.abs(unitB.y-unitA.y))
+	var dist = Math.abs(unitB.x-unitA.x) + Math.abs(unitB.y-unitA.y);
+
+	var hitBack = (unitB.range <= dist) && !unitB.sleeping;
+
+	if (unitA.range <= dist)
 		return new Error("Insufficient range");
 
 	if (unitB.player === unitA.player)
 		return new Error("Attacking your own unit would be pretty stupid");
 
 	unitA.attacked = true;
-	// TODO: take in account the range for the riposte (?)
+	if (unitA.fast === true)
+		unitA.moved = false;
+
+	if (hitBack === false ) {
+		unitA.dealDamage(unitB);
+		return false;
+	}
+
 	if (unitB.defender || unitB.guarding) {
-		// TODO: play guarding animation
-		if (!unitA.assassinue) {
-			if (unitB.dealDamage(unitA))
+		_gr.showDefenseAnim(unitB.y, unitB.x);
+		if (!unitA.assassin) {
+			if (!unitB.dealDamage(unitA) && hitBack)
 				unitA.dealDamage(unitB);
-			return true;
+			return false;
 		} else {
-			// TODO: play assassinate animation
+			_gr.showAssassinAnim(unitA.y, unitA.x);
 		}
 	}
 	
-	if (unitA.dealDamage(unitB))
+	if (!unitA.dealDamage(unitB))
 		unitB.dealDamage(unitA);
 
-	return true;
+	return false;
 }; // attack
 
 
-Unit.prototype.dealDamage = function(targetedUnit) {
+Unit.prototype.dealDamage = function(target) {
 
-	var damage = (this.power * this.health) /5;
+	var attacker = this;
+
+	var defensive = Math.log(
+				target.defense + _g.map[attacker.x][attacker.y].terrain.defense);
+	if (!defensive || defensive < 1)
+		defensive = 1;
+
+	var damage = (this.power * this.health * 0.2)/ (defensive) ;
 
 	// Round at the 2nd decimal
 	damage = Math.round(damage * 100) / 100;
 
 
-	targetedUnit.health -= damage;
+	target.health -= damage;
 
 	// Round at the 2nd decimal
-	targetedUnit.health = Math.round(targetedUnit.health * 100) / 100;
-	
-	console.log("Unit "+this.id+" deals "+damage+" to unit "+targetedUnit.id+
-				", has "+targetedUnit.health+"hp left" );
+	target.health = Math.round(target.health * 100) / 100;
 
 
-	// TODO: use the defense and terrain protection
-	// TODO: attack animation
+	_gr.attackUnit({x:attacker.y, y:attacker.x}, {x:target.y, y:target.x});
 
-	if (targetedUnit.health <= 0.0) {
-		targetedUnit.destroy();
-		return false;
+	if (target.health <= 0.0) {
+		target.destroy();
+		return true;
 	}
 
-	return true;
+	return false;
 }; // dealDamage
 
 
 Unit.prototype.destroy = function() {
-	console.log("Unit "+this.id+" is destroyed"); /*Debug marker*/
 
-    delete g.UnitStorage[this.player][this.id];
+    _gr.killUnit({x:this.y, y:this.x});
 
-    delete g.map[this.x][this.y].unit;
+    delete _g.unitStorage[this.player][this.id];
 
-    g.map[this.x][this.y].unit = null;
+    delete _g.map[this.x][this.y].unit;
 
-    // TODO: destroying animation
+    _g.map[this.x][this.y].unit = null;
 
-	return true;
+	return false;
 }; // destroy
