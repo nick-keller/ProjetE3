@@ -11,7 +11,8 @@ $(function(){
                 x:0, y:0,
                 path: null,
                 currentNode: 0
-            }
+            },
+            darkenedUnits: []
         },
 
         /**
@@ -141,7 +142,17 @@ $(function(){
          * @param sleeping
          */
         setSleeping: function(x, y, sleeping){
-            // TODO
+            _gr.map.units[x][y].sleeping = sleeping;
+        },
+
+        /**
+         * set the number to be displayed on the unit
+         * @param x
+         * @param y
+         * @param hp number to be displayed. null to hide
+         */
+        setHP: function(x, y, hp){
+            _gr.map.units[x][y].hp = hp;
         },
 
         /**
@@ -150,14 +161,18 @@ $(function(){
          * @param y
          */
         darkenUnit: function(x, y){
-            // TODO
+            _gr.map.units[x][y].darkened = true;
+            _gr.global.darkenedUnits.push(_gr.map.units[x][y]);
         },
 
         /**
          * undarken all units
          */
         undarkenAll: function(){
-            // TODO
+            for(var i=_gr.global.darkenedUnits.length; i--; ){
+                _gr.global.darkenedUnits[i].darkened = false;
+                _gr.global.darkenedUnits.pop();
+            }
         }
     };
 
