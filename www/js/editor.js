@@ -1,5 +1,5 @@
 $(function(){
-    var _e = {
+    window._e = {
         current: {
             editorMode: null,
             tile: 1,

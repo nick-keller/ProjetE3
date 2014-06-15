@@ -9,7 +9,7 @@ window.requestAnimFrame = (function(){
         };
 })();
 
-var _c = {
+window._c = {
     const: {
         world: {
             w: 640,
@@ -32,6 +32,9 @@ var _c = {
         },
         data: {
 
+        },
+        render: {
+            prevTime: 0
         }
     },
 
@@ -77,13 +80,18 @@ var _c = {
          * @param clearFirst if specified and true, the layer will be cleared first
          */
         blitBuffer: function(layer, clearFirst){
+            layer.save();
+
             if(clearFirst == true)
-                _c.layers.clearLayer(layer);
+                layer.globalCompositeOperation = "copy";
             layer.drawImage(_c.canvas.buffer[0], 0, 0);
+
+            layer.restore();
         },
 
         /**
          * draw a rectangle
+         * default params: {layer:buffer, x:0, y:0, w:32, h:32, fill:null, stroke:null, strokeWidth:1}
          * @param params parameters of the rectangle
          */
         drawRect: function(params){
@@ -111,6 +119,11 @@ var _c = {
             params.layer.restore();
         },
 
+        /**
+         * draw a tile in grid unit
+         * default params: {layer:buffer, tileId:1, x:0, y:0}
+         * @param params parameters of the tile to be drawn
+         */
         drawTile: function(params){
             params = _c.setDefaultParams(params, {
                 layer: _c.layers.buffer,
@@ -118,7 +131,6 @@ var _c = {
                 x: 0, y: 0
             });
 
-            //http://localhost/ProjetE3/www/spritesheet/tilesx2.png
             var tile = _c.const.data.tiles.filter(function(e){
                 return e.id == params.tileId;
             });
@@ -129,6 +141,11 @@ var _c = {
             params.layer.drawImage(_c.const.textures.tiles, tile.x * 32, tile.y * 32, 32, 32, params.x * 32,  params.y * 32, 32, 32);
         },
 
+        /**
+         * draw a building in grid unit
+         * default params: {layer:buffer, buildingId:1, x:0, y:0}
+         * @param params parameters of the building to be drawn
+         */
         drawBuilding: function(params){
             params = _c.setDefaultParams(params, {
                 layer: _c.layers.buffer,
@@ -136,7 +153,6 @@ var _c = {
                 x: 0, y: 0
             });
 
-            //http://localhost/ProjetE3/www/spritesheet/buildingsx2.png
             var building = _c.const.data.buildings.filter(function(e){
                 return e.id == params.buildingId;
             });
@@ -145,6 +161,27 @@ var _c = {
             building = building[0];
 
             params.layer.drawImage(_c.const.textures.buildings, building.x * 32, building.y * 64, 32, 64, params.x * 32,  params.y * 32-32, 32, 64);
+        },
+
+        /**
+         * draw a unit in grid unit
+         * default params: {layer:buffer, unit:{id:1}, x:0, y:0}
+         * @param params parameters of the unit to be drawn
+         */
+        drawUnit: function(params){
+            params = _c.setDefaultParams(params, {
+                layer: _c.layers.buffer,
+                unit: {id:1},
+                x: 0, y: 0
+            });
+
+            _c.layers.drawRect({
+                layer: params.layer,
+                x: params.x*32 +2, y: params.y*32 +2,
+                w: 28, h: 28,
+                fill: "#36BC92",
+                stroke: "#05A87A"
+            });
         }
     },
 
@@ -348,22 +385,33 @@ var _c = {
         });
 
         var render = function(){
+            var time = new Date().getMilliseconds() / 1000;
+            var currentTime = new Date().getTime();
+
+            var event = {
+                loop: time,
+                halfLoop: Math.cos(time*6.28)/2+0.5,
+                delta: (currentTime - _c.const.render.prevTime) / 1000,
+                time: currentTime
+            };
+
             $.each(_c.callbacks.render, function(i, callback){
-                var time = new Date().getMilliseconds() / 1000;
-
-                var event = {
-                    loop: time,
-                    halfLoop: Math.cos(time*6.28)/2+0.5
-                };
-
                 callback(event);
             });
+
+            _c.const.render.prevTime = currentTime;
+
             window.requestAnimFrame(render);
         };
 
         render();
     },
 
+    /**
+     * set the size of the level in grid units.
+     * default: {w:20, h:12}
+     * @param params size
+     */
     setSize: function(params){
         params = _c.setDefaultParams(params, {
             w: 20, h:12
@@ -440,9 +488,11 @@ var _c = {
     /**
      * add a callback to the render pipeline. The callback will be called each time a new frame is calculated.
      * event passed to callback:
-     * {(float) loop, (float) halfLoop}
+     * {(float) loop, (float) halfLoop, (float) delta, (int) time}
      * loop: goes from 0 to 1 in 1 sec and instantly goes back to 0.
      * halfLoop: goes from 0 to 1 in 0.5 sec and goes back to 0 in 0.5 sec.
+     * delta: the number of seconds since last render
+     * time: current time in miliseconds
      * @param callback the callback method
      */
     render: function(callback){
