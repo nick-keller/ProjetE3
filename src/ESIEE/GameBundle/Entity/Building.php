@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Building
  *
- * @ORM\Table()
+ * @ORM\Table(name="esiee_game_building")
  * @ORM\Entity(repositoryClass="ESIEE\GameBundle\Repository\BuildingRepository")
  */
 class Building

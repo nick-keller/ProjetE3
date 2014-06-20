@@ -1,0 +1,3 @@
+esiee_game_index:
+    pattern:  /
+    defaults: { _controller: ESIEEGameBundle:Play:index }

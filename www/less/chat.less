@@ -1,0 +1,132 @@
+@import "mixins";
+
+body > .chat{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+
+    .conv{
+        @width: 200px;
+
+        position: absolute;
+        vertical-align: bottom;
+        width: @width;
+        height: 250px;
+        bottom: 0;
+        right: 0;
+
+        background: #E5E5E5;
+
+        .loop(@index) when (@index > 1) {
+
+            &:nth-child(@{index}){right: (@index - 1)*(@width + 10px);}
+            .loop(@index - 1);
+        }
+        .loop(1) {}
+
+        .loop(10);
+
+        .header{
+            position: relative;
+            padding: 0 10px;
+            height: 25px;
+            line-height: 25px;
+
+            background: #404040;
+            color: #eee;
+
+            .close{
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 25px;
+
+                text-align: center;
+                line-height: 25px;
+                cursor: pointer;
+            }
+
+            .toggle{
+                position: absolute;
+                top: 0;
+                right: 25px;
+                bottom: 0;
+                width: 25px;
+
+                text-align: center;
+                line-height: 25px;
+                cursor: pointer;
+
+                .fa-toggle-up{
+                    display: none;
+                }
+            }
+        }
+
+        .form{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            height: 25px;
+            background: white;
+
+            textarea{
+                position: absolute;
+                padding: 0 5px 0 5px;
+                .box-sizing();
+                top: 0;
+                left: 0;
+                right: 25px;
+                bottom: 0;
+                height: 25px;
+                width: @width - 25px;
+
+                line-height: 11px;
+                font-family: 'Calibri';
+                font-size: 11px;
+
+                border: none;
+                resize: none;
+            }
+
+            .send{
+                width: 25px;
+                height: 25px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+
+                color: #444;
+                cursor: pointer;
+                text-align: center;
+                line-height: 25px;
+            }
+        }
+
+        &.mini{
+            height: 25px;
+
+            .header{
+                .toggle{
+                    .fa-toggle-up{
+                        display: inline-block;
+                    }
+
+                    .fa-toggle-down{
+                        display: none;
+                    }
+                }
+            }
+
+            .form{
+                display: none;
+            }
+        }
+    }
+}

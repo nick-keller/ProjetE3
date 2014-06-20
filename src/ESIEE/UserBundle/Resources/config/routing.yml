@@ -1,0 +1,3 @@
+esiee_user_me:
+    pattern:  /me
+    defaults: { _controller: ESIEEUserBundle:Me:index }

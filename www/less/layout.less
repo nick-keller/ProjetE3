@@ -1,4 +1,66 @@
+@import "mixins";
+
 html, body{
     margin: 0;
     padding: 0;
+
+    background: url('../img/fond.png') top no-repeat black;
+    background-size: 100% auto;
+}
+
+body > header{
+    height: 127px;
+    position: relative;
+
+    background: url('../img/top.png') top no-repeat, url('../img/top_repeat.png') top repeat-x;
+
+    .main{
+        @width: 197px;
+
+        position: absolute;
+        width: @width;
+        height: 81px;
+        left: 50%;
+        margin-left: floor(-@width / 2);
+
+        .play{
+            display: block;
+            height: 61px;
+            margin-top: 2px;
+            .border-radius(3px);
+
+            line-height: 61px;
+            text-align: center;
+            color: rgba(255,255,255,.9);
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 5px black;
+            cursor: pointer;
+            text-decoration: none;
+
+            &:hover{
+                color: white;
+                box-shadow: 0 0 20px rgba(0,0,0,.5) inset;
+                background: rgba(130,226,74,.2);
+            }
+        }
+
+        .stats{
+            height: 18px;
+
+            color: white;
+            font-size: 11px;
+            line-height: 18px;
+        }
+    }
+}
+
+.main-content{
+    margin: auto;
+    max-width: 900px;
+
+    .container{
+        background: white;
+        padding: 10px;
+    }
 }

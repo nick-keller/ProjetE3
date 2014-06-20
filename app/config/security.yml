@@ -30,7 +30,7 @@ security:
             pattern:      .*
             form-login:
                 provider:       fos_userbundle
-                login_path:     /login
+                login_path:     /
                 use_forward:    false
                 check_path:     /login_check
                 failure_path:   null
