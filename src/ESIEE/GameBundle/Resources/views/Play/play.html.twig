@@ -2,4 +2,27 @@
 
 {% block body %}
     <h1>Jouer</h1>
+    <div id="game-container"
+         data-send-str="{{ path('esiee_game_send_str', {id:game.id}) }}"
+         data-receive-str="{{ path('esiee_game_receive_str', {id:game.id}) }}"
+            >
+        <div class="game-renderer">
+            <div class="playground"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/gameRenderer.js') }}"></script>
+    <script type="text/javascript">
+        tiles = [];
+        tileFamily = [];
+        buildings = [];
+        $(function(){
+            _gr.receiveStr(function(data){
+                console.log(data);
+            });
+        });
+    </script>
 {% endblock %}

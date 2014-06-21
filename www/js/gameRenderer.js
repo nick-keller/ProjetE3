@@ -30,6 +30,40 @@ $(function(){
         },
 
         /**
+         * sends a string to the other player via the server
+         * see also: receiveStr
+         * @param str the string to send
+         */
+        sendStr: function(str){
+            $url = $('#game-container').data('send-str');
+
+            $.get($url, {msg: str});
+        },
+
+        /**
+         * check to see if the other player sent a string via the sendStr method.
+         * If onNoMessage is not specified, this method will keep sending request to the server until a message is found
+         * @param onSuccess callback when a message is found with the message as parameter
+         * @param onNoMessage callback when no message is found
+         */
+        receiveStr: function(onSuccess, onNoMessage){
+            if(onNoMessage == undefined)
+                onNoMessage = function(){
+                    _gr.receiveStr(onSuccess);
+                };
+
+            $url = $('#game-container').data('receive-str');
+
+            $.get($url, null, function(data){
+                if(data === null)
+                    onNoMessage();
+                else{
+                    onSuccess(data.message);
+                }
+            }, 'json');
+        },
+
+        /**
          * add a unit to a specific point on the map.
          * if a unit is already on the specified location it will be replaced
          * @param x
