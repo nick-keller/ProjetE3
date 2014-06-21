@@ -36,6 +36,12 @@ class Game
      */
     private $opponent;
 
+    public function __construct(User $creator = null, User $opponent = null)
+    {
+        $this->creator = $creator;
+        $this->opponent = $opponent;
+    }
+
 
     /**
      * Get id

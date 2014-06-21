@@ -1,3 +1,19 @@
 esiee_game_index:
     pattern:  /
     defaults: { _controller: ESIEEGameBundle:Play:index }
+
+esiee_game_new:
+    pattern:  /new/{id}
+    defaults: { _controller: ESIEEGameBundle:Play:new }
+
+esiee_game_play:
+    pattern:  /play/{id}
+    defaults: { _controller: ESIEEGameBundle:Play:play }
+
+esiee_game_send_str:
+    pattern:  /play/{id}/send_str
+    defaults: { _controller: ESIEEGameBundle:Play:send }
+
+esiee_game_receive_str:
+    pattern:  /play/{id}/receive_str
+    defaults: { _controller: ESIEEGameBundle:Play:receive }

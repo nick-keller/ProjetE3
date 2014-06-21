@@ -11,7 +11,7 @@
             <tr>
                 <td>{{ user }}</td>
                 <td>
-                    <a>jouer</a>
+                    <a href="{{ path('esiee_game_new', {id:user.id}) }}">jouer</a>
                 </td>
             </tr>
         {% endfor %}
