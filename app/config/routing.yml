@@ -19,6 +19,9 @@ home:
 login_check:
     path: /login_check
 
+logout:
+    path: /logout
+
 sonata_user_security:
     resource: "@SonataUserBundle/Resources/config/routing/sonata_security_1.xml"
 

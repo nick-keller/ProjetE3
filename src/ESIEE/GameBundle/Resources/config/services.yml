@@ -2,6 +2,13 @@ parameters:
 #    esiee_game.example.class: ESIEE\GameBundle\Example
 
 services:
+    game.twig.esiee_get_game_data:
+        class: ESIEE\GameBundle\Twig\GameDataExtension
+        tags:
+            - { name: twig.extension }
+        arguments:
+            - @doctrine.orm.entity_manager
+
     game.form.type.tiletype:
         class: ESIEE\GameBundle\Form\Type\TileType
         tags:

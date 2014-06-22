@@ -24,7 +24,8 @@ class PlayController extends Controller
     public function indexAction()
     {
         return array(
-            'users' => $this->em->getRepository('ESIEEUserBundle:user')->findAll()
+            'users' => $this->em->getRepository('ESIEEUserBundle:User')->findAll(),
+            'games' => $this->em->getRepository('ESIEEUserBundle:Game')->findForUser($this->getUser())
         );
     }
 

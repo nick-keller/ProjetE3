@@ -64,6 +64,13 @@ $(function(){
         },
 
         /**
+         * returns true if the player initiated the game and false if he was invited to play
+         */
+        isMaster: function(){
+            return $('#game-container').data('is-master') == 1;
+        },
+
+        /**
          * add a unit to a specific point on the map.
          * if a unit is already on the specified location it will be replaced
          * @param x

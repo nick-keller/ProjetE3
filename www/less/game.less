@@ -1,0 +1,37 @@
+@import "mixins";
+
+@width: 640px;
+@height: 384px;
+
+.game-renderer{
+    position: relative;
+    padding-top: @height;
+
+    .playground{
+        width: @width;
+        height: @height;
+        position: absolute;
+        overflow: hidden;
+        top: 0;
+
+        background-color:#232323;
+        background-image: linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+        background-size:64px 64px, 64px 64px, 16px 16px, 16px 16px;
+        background-position:-1px -1px, -1px -1px, -0px -0px, -0px -0px;
+
+        canvas {
+            width: @width;
+            height: @height;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            &[data-layer="buffer"]{
+                display: none;
+            }
+        }
+    }
+}

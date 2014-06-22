@@ -53,6 +53,38 @@ body > header{
             line-height: 18px;
         }
     }
+
+    .menu-left, .menu-right{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 34px;
+        line-height: 34px;
+
+        a{
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            padding: 0 5px;
+
+            &:hover{
+                text-shadow: 0 0 3px white;
+            }
+        }
+    }
+
+    .menu-left{
+        right: 50%;
+        margin-right: 170px;
+        text-align: right;
+    }
+
+    .menu-right{
+        left: 50%;
+        margin-left: 170px;
+    }
 }
 
 .main-content{

@@ -3,6 +3,7 @@
 namespace ESIEE\GameBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use ESIEE\UserBundle\Entity\User;
 
 /**
  * GameRepository
@@ -12,4 +13,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class GameRepository extends EntityRepository
 {
+    public function findForUser(User $user)
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.creator = :user OR g.opponent = :user')
+            ->setParameter('user', $user)
+            ->getQuery()->getResult();
+    }
 }
