@@ -2,7 +2,9 @@ function Game(pMap, pPlayers) {
 
 	window._g = this;
 
-	this.clickState = {state: null};
+	this.clickState = {
+		state: null
+	};
 
 	this.idCount = 1;
 
@@ -22,89 +24,154 @@ function Game(pMap, pPlayers) {
 		sprite: null
 	};
 
-	var defaultMap = [	[{unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}],
-						[{unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}],
-						[{unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}],
-						[{unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}, {unit:null, terrain:defaultTerrain}]
-		];
+	this.size = Math.pow(10, Math.max(
+		maxX.toString().length,
+		maxY.toString().length
+	) + 1);
+
+	var defaultMap = [
+		[{
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}],
+		[{
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}],
+		[{
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}],
+		[{
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}, {
+			unit: null,
+			terrain: defaultTerrain
+		}]
+	];
 
 	// x are up/down, and y are left/right
 
 
 	this.map = pMap || defaultMap;
-	this.unitStorage = { 0:{}, 1:{} };
-
-	//for (var i = this.players.length - 1; i >= 0; i--) {
-	//	this.unitStorage.player[i] = {};
-	//}
+	this.unitStorage = {
+		0: {},
+		1: {}
+	};
 
 	this.turn = 0;
 
 
-	
+
 }
 
-Game.prototype.onClick = function(x, y) {
+Game.prototype.onClick = function(y, x) {
 	var cl = JSON.parse(JSON.stringify(clickState));
-	switch(cl.state) {
+	switch (cl.state) {
 
 		case null:
-			if (_g.map[y][x].unit !== null) {
-				var unit = _g.map[y][x].unit;
+			if (_g.map[x][y].unit !== null) {
+				var unit = _g.map[x][y].unit;
 				_g.clickState.x = x;
 				_g.clickState.y = y;
 
-				if ((unit.player !== _g.turn) /*&& (unit.player !== _g.player)*/) {
+				if (unit.player === _g.turn) {
 					_g.clickState.state = "ownUnit";
 					_g.clickState.unit = unit;
 					_g.clickState.moveableCells = unit.getMoveableCells();
-					// TODO: _g.clickState.attCells = unit.getAttCells();
-					// TODO: color the cells
+					_g.clickState.attCells = unit.getAttCells();
 					// TODO: menu
+					for (var i in _g.clickState.moveableCells) {
+						if (_g.clickState.attCells[i] !== undefined) {
+							highlightCell(i % size, Math.floor(i / size), blue, red);
+						} else {
+							highlightCell(i % size, Math.floor(i / size), blue, null);
+						}
+					}
+
+					for (var i in _g.clickState.attCells) {
+						highlightCell(i % size, Math.floor(i / size), blue, red);
+					}
+
+
 				}
 			}
 			return;
 
 		case "ownUnit":
-			var moveable = false;
-			for (var i in cl.moveableCells) 
-				if (cl.x === x && cl.y === y)
-					moveable = true;
 
-			var attackable = false;
-			for (var i in cl.attCells) 
-				if (cl.x === x && cl.y === y)
-					attackable = true;
-
-			if (attackable === true) {
-				unit.attack(_g.map[y][x].unit);
-				// TODO: uncolor cells
-				_g.clickState = {state: null};
+			if (cl.moveableCells[x * _g.size + y] !== undefined) {
+				_gr.unHighlightAll();
+				cl.unit.moveToCell(y, x, cl.moveableCells);
+				_g.clickState = {
+					state: null
+				};
 				return;
 			}
 
-			if (moveable === true) {
-				unit.moveToCell(y, x, cl.moveableCells);
-				// TODO: uncolor cells
-				_g.clickState = {state: null};
+			if (cl.attCells[x * _g.size + y] !== undefined &&
+				_g.map[x][y].unit !== null &&
+				_g.map[x][y].unit.player !== _g.turn) {
+				_gr.unHighlightAll();
+				cl.unit.attack(_g.map[x][y].unit);
+				_g.clickState = {
+					state: null
+				};
 				return;
 			}
 
-			// TODO: uncolor cells
-			_g.clickState = {state: null};
+
+			_gr.unHighlightAll();
+			_g.clickState = {
+				state: null
+			};
 			return;
 
 		default:
 
 
-	};
+	}
 };
 
 Game.prototype.cycleTurn = function() {
 
 	for (var i in _g.unitStorage[this.turn]) {
 		var tmpUnit = this.map[_g.unitStorage[this.turn][i].x]
-							[this.unitStorage[this.turn][i].y].unit;
+		[this.unitStorage[this.turn][i].y].unit;
 
 
 		tmpUnit.guarding = false;
@@ -112,8 +179,10 @@ Game.prototype.cycleTurn = function() {
 		tmpUnit.moved = false;
 	}
 
+	_gr.undarkenAll();
 
-	this.turn = (this.turn+1)%(this.players.length);
+
+	this.turn = (this.turn + 1) % (this.players.length);
 
 	return true;
 };
