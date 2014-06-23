@@ -1,9 +1,18 @@
-function Unit(param, x, y, player) {
+/**
+ * Constructor of the unit
+ * @param {Object} param; an object with all the attributes of the unit
+ * @param {Number} x;
+ * @param {Number} y;
+ * @param {number} player;
+ * @return {Object}; this
+ */
+ function Unit(param, x, y, player) {
 	this.name = param.name;
 	this.desc = param.desc;
 	this.longDesc = param.longDesc;
 
 	this.id = _g.idCount++;
+	this.unitTypeId = param.id;
 
 	this.player = player;
 
@@ -23,12 +32,11 @@ function Unit(param, x, y, player) {
 	this.x = x;
 	this.y = y;
 
-	this.guarding = false;
 
 	// To execute at initialization
 	_g.map[this.x][this.y].unit = this;
 
-	// TODO: _gr.addUnit(this.id);
+	_gr.addUnit(this.y, this.x, this.unitTypeId);
 	_g.unitStorage[this.player][this.id] = {
 		x: this.x,
 		y: this.y
@@ -37,11 +45,17 @@ function Unit(param, x, y, player) {
 
 	this.moved = false;
 	this.attacked = false;
+	this.guarding = false;
+	this.resting = false;
 
 	return this;
 }
 
-
+/**
+ * Put the unit into guard state
+ * @this {Object}; The unit
+ * @return {Bool/Error}; Returns false if sucessfull, else error
+ */
 Unit.prototype.guard = function() {
 	if (this.attacked || this.moved)
 		return new Error("This unit already has moved or attacked," +
@@ -56,6 +70,30 @@ Unit.prototype.guard = function() {
 };
 
 
+/**
+ * Put the unit into rest state
+ * @this {Object}; The unit
+ * @return {Bool/Error}; Returns false if sucessfull, else error
+ */
+Unit.prototype.guard = function() {
+	if (this.attacked || this.moved)
+		return new Error("This unit already has moved or attacked," +
+			" it can't rest");
+
+	this.resting = true;
+	this.attacked = true;
+	this.moved = true;
+
+	_gr.darkenUnit(this.y, this.x);
+	return false;
+};
+
+
+/**
+ * Finds the units where a unit can travel
+ * @this {Object}; The unit
+ * @return {Object}; The cells where the unit can move, with the cost
+ */
 Unit.prototype.getMoveableCells = function() {
 	var unit = this;
 	var maxX = _g.map.length;
@@ -96,7 +134,11 @@ Unit.prototype.getMoveableCells = function() {
 };
 
 
-
+/**
+ * Finds the units where a unit can attack
+ * @this {Object}; The unit
+ * @return {Object}; The cells where the unit can attack, with the cost
+ */
 Unit.prototype.getAttCells = function() {
 	var unit = this;
 	var maxX = _g.map.length;
@@ -132,7 +174,14 @@ Unit.prototype.getAttCells = function() {
 	return cells;
 };
 
-
+/**
+ * Moves an unit
+ * @this {Object}; The unit
+ * @param {Number} px; Where to move
+ * @param {Number} py; Where to move
+ * @param {Object} mc; Moveable cells
+ * @return {Bool/Error}; Returns false if sucessfull, else error
+ */
 Unit.prototype.moveToCell = function(px, py, mc) {
 
 	if (this.player !== _g.turn)
@@ -207,7 +256,12 @@ Unit.prototype.moveToCell = function(px, py, mc) {
 }; // moveToCell
 
 
-
+/**
+ * Makes an unit attack another one
+ * @this {Object} unitA; The unit attacking
+ * @param {Object} unitB; The unit attacked
+ * @return {Bool/Error}; Returns false if sucessfull, else error
+ */
 Unit.prototype.attack = function(unitB) {
 	var unitA = this;
 
@@ -219,7 +273,7 @@ Unit.prototype.attack = function(unitB) {
 
 	var dist = Math.abs(unitB.x - unitA.x) + Math.abs(unitB.y - unitA.y);
 
-	var hitBack = (unitB.range <= dist) && !unitB.sleeping;
+	var hitBack = (unitB.range <= dist) && !unitB.resting;
 
 	if (unitA.range <= dist)
 		return new Error("Insufficient range");
@@ -258,7 +312,13 @@ Unit.prototype.attack = function(unitB) {
 	return false;
 }; // attack
 
-
+/**
+ * Makes an unit hit another one
+ * @this {Object}; The unit attacking
+ * @param {Object} target; The unit attacked
+ * @return {Bool/Error}; Returns false if sucessfull, 
+ * 						true if the unit is killed, else error
+ */
 Unit.prototype.dealDamage = function(target) {
 
 	var attacker = this;
@@ -296,13 +356,14 @@ Unit.prototype.dealDamage = function(target) {
 	return false;
 }; // dealDamage
 
-
+/**
+ * Kills an unit
+ * @this {Object}; The unit attacking
+ * @return {Bool/Error}; Returns false if sucessfull, else error
+ */
 Unit.prototype.destroy = function() {
 
-	_gr.killUnit({
-		x: this.y,
-		y: this.x
-	});
+	_gr.killUnit(this.y, this.x);
 
 	delete _g.unitStorage[this.player][this.id];
 

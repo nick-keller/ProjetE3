@@ -1,4 +1,4 @@
-function Game(pMap, pPlayers) {
+function Game(pMap, pPlayers, pUnits) {
 
 	window._g = this;
 
@@ -10,7 +10,7 @@ function Game(pMap, pPlayers) {
 
 	this.players = pPlayers || [0, 1];
 
-	var defaultTerrain = {
+	this.t = {
 		name: "plain",
 		protection: 1,
 		moveFactor: {
@@ -24,79 +24,63 @@ function Game(pMap, pPlayers) {
 		sprite: null
 	};
 
-	this.size = Math.pow(10, Math.max(
-		maxX.toString().length,
-		maxY.toString().length
-	) + 1);
-
-	var defaultMap = [
-		[{
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}],
-		[{
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}],
-		[{
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}],
-		[{
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}, {
-			unit: null,
-			terrain: defaultTerrain
-		}]
-	];
-
-	// x are up/down, and y are left/right
-
-
-	this.map = pMap || defaultMap;
-	this.unitStorage = {
-		0: {},
-		1: {}
+	this.defaultUnit = {
+		"name": "Bowmen",
+		"desc": "An archer",
+		"longDesc": "A troop of archers armed with bows. This is the basic ranged unit.",
+		"power": 1,
+		"range": 3,
+		"defense": 0,
+		"fast": false,
+		"defender": false,
+		"assassin": false,
+		"moveType": "foot",
+		"moveValue": 3
 	};
+
+	this.unitStorage = {0: {}, 1: {}};
 
 	this.turn = 0;
 
 
+	// x are up/down, and y are left/right
+	this.defaultMap = [
+		[{unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}],
+		[{unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}],
+		[{unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}],
+		[{unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}, {unit: null, terrain: _g.t}]
+	];
 
+
+	this.defaultUnits = [];
+	this.defaultUnits.push($.extend(true, {}, this.defaultUnit));
+	this.defaultUnits.push($.extend(true, {}, this.defaultUnit));
+	this.defaultUnits[0].x = 0;
+	this.defaultUnits[0].y = 0;
+	this.defaultUnits[0].player = 0;
+	this.defaultUnits[1].x = 0;
+	this.defaultUnits[1].y = 2;
+	this.defaultUnits[1].player = 1;
+
+
+	this.map = pMap || this.defaultMap;
+	this.units = pUnits || this.defaultUnits;
+
+	this.size = Math.pow(10, Math.max(
+		this.map.length.toString().length,
+		this.map[0].length.toString().length
+	) + 1);
+
+
+	for (var i = this.units.length - 1; i >= 0; i--) {
+		new Unit(this.units[i], this.units[i].x, this.units[i].y, this.units[i].player);
+	}
+
+
+	delete this.unit;
+	delete this.defaultMap;
+	delete this.defaultUnits;
+	delete this.defaultUnit;
 }
 
 Game.prototype.onClick = function(y, x) {
@@ -169,26 +153,22 @@ Game.prototype.onClick = function(y, x) {
 
 Game.prototype.cycleTurn = function() {
 
+	_gr.undarkenAll();
+
 	for (var i in _g.unitStorage[this.turn]) {
 		var tmpUnit = this.map[_g.unitStorage[this.turn][i].x]
-		[this.unitStorage[this.turn][i].y].unit;
+					[this.unitStorage[this.turn][i].y].unit;
 
 
 		tmpUnit.guarding = false;
 		tmpUnit.attacked = false;
 		tmpUnit.moved = false;
+		_gr.darkenUnit(tmpUnit.y, tmpUnit.x);
 	}
 
-	_gr.undarkenAll();
 
 
 	this.turn = (this.turn + 1) % (this.players.length);
 
 	return true;
-};
-
-
-Game.prototype.getUnitById = function(player, id) {
-	var obj = _g.unitStorage[player][id];
-	return _g.map[obj.x][obj.y].unit;
 };

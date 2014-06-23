@@ -14,6 +14,23 @@ var tmpUnit = {
 
 var expect = chai.expect;
 
+// Placeholder for _gr to satisfy mocha
+window._gr = {
+  addUnit: function(){},
+  moveUnit: function(){},
+  killUnit: function(){},
+  attackUnit: function(){},
+  showDefenseAnim: function(){},
+  showAssassinAnim: function(){},
+  highlightCell: function(){},
+  unHighlightCell: function(){},
+  unHighlightAll: function(){},
+  setSleeping: function(){},
+  setHP: function(){},
+  darkenUnit: function(){},
+  undarkenAll: function(){}
+};
+
 
 
 describe('Verify the classes initialisation and structure', function() {
@@ -34,19 +51,19 @@ describe('Verify the classes initialisation and structure', function() {
   it('Class Unit.js', function(done) {
 
     new Game();
-    var unit = new Unit(tmpUnit, 1, 1, 1);
+    var unit = _g.map[0][0].unit;
+    
     expect(unit.name).to.equal("Bowmen");
     expect(unit.desc).to.equal("An archer");
     expect(unit.longDesc).to.be.a('String');
 
     expect(unit.id).to.be.an('Number');
 
-    expect(unit.player).to.equal(1);
+    expect(unit.player).to.equal(0);
 
     expect(unit.power).to.equal(1);
     expect(unit.range).to.equal(3);
     expect(unit.defense).to.equal(0);
-
     expect(unit.health).to.equal(10.0);
 
     expect(unit.fast).to.be.false;
@@ -56,8 +73,9 @@ describe('Verify the classes initialisation and structure', function() {
     expect(unit.moveType).to.equal('foot');
     expect(unit.moveValue).to.equal(3);
 
-    expect(unit.x).to.equal(1);
-    expect(unit.y).to.equal(1);
+
+    expect(unit.x).to.equal(0);
+    expect(unit.y).to.equal(0);
 
     expect(unit.guarding).to.be.false;
 
@@ -73,8 +91,6 @@ describe('Testing routine of the game side of the application', function(done) {
 
   beforeEach(function(done){
     new Game();
-    new Unit(tmpUnit, 0, 0, 0);
-    new Unit(tmpUnit, 0, 2, 1);
     done();
   });
 
@@ -84,15 +100,26 @@ describe('Testing routine of the game side of the application', function(done) {
     // Starting the attack routine
 
 
-    expect(_g.getUnitById(0,1).attack(_g.getUnitById(1,2))).to.be.false;
+    var cells = _g.map[0][0].unit.getAttCells();
+
+    expect(cells).to.be.an('Object');
+
+    expect(cells[0]).to.be.a('Number');
+
+    expect(cells[200]).to.be.a('Number');
+    console.log('Attackable cells when unit is at (0,0)',cells);
+    // We expect the right format
+
+
+    expect(_g.map[0][0].unit.attack(_g.map[0][2].unit)).to.be.false;
     // We expect no error here.
 
 
-    expect(_g.getUnitById(0,1).attack(_g.getUnitById(1,2)).message).to.be.a('String');
+    expect(_g.map[0][0].unit.attack(_g.map[0][2].unit).message).to.be.a('String');
     // The unit already attacked this turn.
 
 
-    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1)).message).to.be.a('String');
+    expect(_g.map[0][2].unit.attack(_g.map[0][0].unit).message).to.be.a('String');
     // This is not this unit's turn.
 
 
@@ -102,11 +129,11 @@ describe('Testing routine of the game side of the application', function(done) {
     // We verify the turn have cycled.
 
 
-    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1))).to.be.false;
+    expect(_g.map[0][2].unit.attack(_g.map[0][0].unit)).to.be.false;
     // We expect no error here.
 
 
-    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1)).message).to.be.a('String');
+    expect(_g.map[0][2].unit.attack(_g.map[0][0].unit).message).to.be.a('String');
     // The unit already attacked this turn.
 
 
@@ -116,11 +143,11 @@ describe('Testing routine of the game side of the application', function(done) {
     // We verify the turn have cycled.
 
 
-    expect(_g.getUnitById(1,2).attack(_g.getUnitById(0,1)).message).to.be.a('String');
+    expect(_g.map[0][2].unit.attack(_g.map[0][0].unit).message).to.be.a('String');
     // This is not this unit's turn.
 
 
-    expect(_g.getUnitById(0,1).attack(_g.getUnitById(1,2))).to.be.false;
+    expect(_g.map[0][0].unit.attack(_g.map[0][2].unit)).to.be.false;
     // We expect no error here.
 
 
@@ -133,12 +160,22 @@ describe('Testing routine of the game side of the application', function(done) {
   it('Movement', function(done) {
     // Starting the movement routine
 
+    var cells = _g.map[0][0].unit.getMoveableCells();
 
-    expect(_g.getUnitById(0,1).moveToCell(0,1)).to.be.false;
+    expect(cells).to.be.an('Object');
+
+    expect(cells[0]).to.be.a('Number');
+
+    expect(cells[200]).to.be.a('Number');
+    console.log('Moveable cells when unit is at (0,0)',cells);
+    // We expect the right format
+
+
+    expect(_g.map[0][0].unit.moveToCell(0,1,cells)).to.be.false;
     // We expect no error here.
 
 
-    expect(_g.getUnitById(1,2).moveToCell(0,0).message).to.be.a('String');
+    expect(_g.map[0][2].unit.moveToCell(0,0,_g.map[0][2].unit.getMoveableCells()).message).to.be.a('String');
     // This is not this unit's turn.
 
 
@@ -148,24 +185,13 @@ describe('Testing routine of the game side of the application', function(done) {
     // We verify the turn have cycled.
 
 
-    expect(_g.getUnitById(1,2).moveToCell(0,1).message).to.be.a('String');
+    expect(_g.map[0][2].unit.moveToCell(0,1,_g.map[0][2].unit.getMoveableCells()).message).to.be.a('String');
     // There already is a unit in this cell.
 
 
-    expect(_g.getUnitById(1,2).moveToCell(0,0)).to.be.false;
+    expect(_g.map[0][2].unit.moveToCell(0,0,_g.map[0][2].unit.getMoveableCells())).to.be.false;
     // We expect no error here.
 
-
-    // var cells = _g.getUnitById(0,1).getMoveableCells();
-
-    // expect(cells).to.be.an('Array');
-
-    // expect(cells.length).to.be.equal(8);
-
-    // expect(cells[0]).to.be.an('Object');
-
-    // expect(cells[0].x).to.be.a('Number');
-    // // Should be an array of 8 objects
 
     done();
 
