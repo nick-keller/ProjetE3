@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <h1>Mes niveaux</h1>
+    <table>
+        <tr>
+            <th>Niveau</th>
+            <th></th>
+        </tr>
+        {% for level in levels %}
+            <tr>
+                <td>{{ level.name }}</td>
+                <td>
+                    <a href="{{ path('esiee_editor_edit', {id:level.id}) }}">Editer</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ path('esiee_editor_new') }}">Nouveau</a>
+{% endblock %}

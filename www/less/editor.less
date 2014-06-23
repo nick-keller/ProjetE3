@@ -39,6 +39,7 @@
         padding-top: 1px;
 
         background: #3a3a3a;
+        font-size: 14px;
 
         > .tabs{
             position: absolute;
@@ -282,7 +283,7 @@
             margin-bottom: 2px;
             .not-selectable();
             cursor: default;
-            .btn();
+            .btn;
             padding-right: 13px;
 
             .options{
@@ -323,12 +324,14 @@
             }
 
             &.active{
-                .btn-down();
+                .btn-down;
                 padding-right: 13px;
             }
         }
 
         .form-row{
+            min-height: 25px;
+
             input, .select{
                 float: right;
             }
@@ -336,7 +339,7 @@
     }
 }
 
-.btn(){
+.btn{
     padding: 0 3px;
     border: solid 1px #303030;
     border-radius: 2px;
@@ -344,10 +347,11 @@
     text-shadow: 0 -1px #232323;
     background: #757575;
     box-shadow: 0 1px #919191 inset, 0 1px #6a6a6a;
+    cursor: default;
 }
 
-.btn-down(){
-    .btn();
+.btn-down, .btn:active{
+    .btn;
     border-color: #272727;
     background: #3f3f3f;
     box-shadow: 0 1px #333333 inset, 0 1px #6a6a6a;

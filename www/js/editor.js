@@ -37,7 +37,55 @@ $(function(){
                 _e.map.building[i].push(0);
             }
         }
-    }).change();
+    }).val(level.mapSize).change();
+
+    $('#btn-save').click(function(){
+        var url = $('.map-editor').data('save');
+        var $this = $(this);
+        $this.prepend('<i class="fa fa-spinner fa-spin"></i>')
+
+        $.post(url,{
+            tiles: JSON.stringify(_e.map.tile),
+            buildings: JSON.stringify(_e.map.building),
+            name: $('#name').val(),
+            size: $('#input-map-size').val()
+        }, function(){
+            $this.find('i').remove();
+        });
+    });
+
+    _e.map.tile = level.tiles;
+    _e.map.building = level.buildings;
+
+    // load tiles
+    _c.layers.clearBuffer();
+    for(var i=0; i<_c.const.world.grid.w; ++i){
+        for(var j=0; j<_c.const.world.grid.h; ++j){
+            _c.layers.drawTile({
+                tileId: _e.map.tile[i][j],
+                x: i, y: j
+            });
+            var tile = _c.const.data.tiles.filter(function(e){
+                return e.id == _e.map.tile[i][j];
+            });
+            if(tile.length != 1) continue;
+            tile = tile[0];
+            _e.map.family[i][j] = tile.family;
+        }
+    }
+    _c.layers.blitBuffer(_c.layers.background, true);
+
+    // load buildings
+    _c.layers.clearBuffer();
+    for(var i=0; i<_c.const.world.grid.w; ++i){
+        for(var j=0; j<_c.const.world.grid.h; ++j){
+            _c.layers.drawBuilding({
+                buildingId: _e.map.building[i][j],
+                x: i, y: j
+            });
+        }
+    }
+    _c.layers.blitBuffer(_c.layers.buildings, true);
 
     $menu.find('.tile').click(function(){
         var $this = $(this);

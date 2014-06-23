@@ -1,3 +1,15 @@
 esiee_editor_homepage:
     pattern:  /
+    defaults: { _controller: ESIEEEditorBundle:Editor:index }
+
+esiee_editor_edit:
+    pattern:  /edit/{id}
     defaults: { _controller: ESIEEEditorBundle:Editor:editor }
+
+esiee_editor_save:
+    pattern:  /save/{id}
+    defaults: { _controller: ESIEEEditorBundle:Editor:save }
+
+esiee_editor_new:
+    pattern:  /new
+    defaults: { _controller: ESIEEEditorBundle:Editor:new }

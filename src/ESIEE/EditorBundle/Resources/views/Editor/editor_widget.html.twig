@@ -1,4 +1,7 @@
-<div class="map-editor">
+<div class="map-editor"
+    data-save="{{ path('esiee_editor_save',{id:level.id}) }}"
+    >
+
     <div class="playground">
         <canvas data-layer="buffer"></canvas>
         <canvas data-layer="background"></canvas>
@@ -33,7 +36,7 @@
                             <label for="name">
                                 Nom
                             </label>
-                            <input type="text" name="name" id="name">
+                            <input type="text" name="name" id="name" value="{{ level.name }}">
                         </div>
 
                         <div class="form-row">
@@ -51,11 +54,9 @@
                                 </div>
                             </div>
                         </div>
-                        <p>
-                            nom
-                            type
-                            taille
-                        </p>
+                        <button class="btn" id="btn-save">
+                            Enregistrer
+                        </button>
                     </div>
                 </div>
             </div>

@@ -25,7 +25,7 @@ class PlayController extends Controller
     {
         return array(
             'users' => $this->em->getRepository('ESIEEUserBundle:User')->findAll(),
-            'games' => $this->em->getRepository('ESIEEUserBundle:Game')->findForUser($this->getUser())
+            'games' => $this->em->getRepository('ESIEEGameBundle:Game')->findForUser($this->getUser())
         );
     }
 
