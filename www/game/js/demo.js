@@ -1,9 +1,9 @@
 // J'utilise : tab, grounds et units
 
 // Peut être intervertir h et w, a tester.
-var pMap = new Array(_c.const.world.grid.h);
+var pMap = new Array(_c.const.world.grid.w);
 for (var i = pMap.length - 1; i >= 0; i--) {
-	pMap[i] = new Array(_c.const.world.grid.w);
+	pMap[i] = new Array(_c.const.world.grid.h);
 }
 
 for (var x = pMap.length - 1; i >= 0; i--) {

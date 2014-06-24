@@ -77,6 +77,10 @@ function Game(pMap, pPlayers, pUnits) {
 	}
 
 
+	_gr.showMenu({name:"Player "+(this.turn-1), disabled: true, callback:function(){}},
+		{name:"End turn", disabled: false, callback:_g.cycleTurn});
+
+
 	delete this.unit;
 	delete this.defaultMap;
 	delete this.defaultUnits;
@@ -152,7 +156,7 @@ Game.prototype.onClick = function(y, x) {
 };
 
 Game.prototype.cycleTurn = function() {
-
+	_gr.showMenu({name:"End turn", disabled: true, callback:function(){}});
 	_gr.undarkenAll();
 
 	for (var i in _g.unitStorage[this.turn]) {
@@ -169,6 +173,9 @@ Game.prototype.cycleTurn = function() {
 
 
 	this.turn = (this.turn + 1) % (this.players.length);
+
+	_gr.showMenu({name:"Player "+(this.turn-1), disabled: true, callback:function(){}},
+		{name:"End turn", disabled: false, callback:_g.cycleTurn});
 
 	return true;
 };
