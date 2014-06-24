@@ -2,19 +2,35 @@
 
 {% block body %}
     <h1>Mes niveaux</h1>
-    <table>
+    <table class="table">
         <tr>
             <th>Niveau</th>
+            <th>Taille</th>
             <th></th>
         </tr>
         {% for level in levels %}
             <tr>
                 <td>{{ level.name }}</td>
                 <td>
-                    <a href="{{ path('esiee_editor_edit', {id:level.id}) }}">Editer</a>
+                    {% if level.size == "20,12" %}
+                        Petit
+                    {% elseif level.size == "40,24" %}
+                        Tres grand
+                    {% else %}
+                        Grand
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('esiee_editor_edit', {id:level.id}) }}" class="btn btn-info">
+                        <i class="fa fa-pencil"></i>
+                        Editer
+                    </a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-    <a href="{{ path('esiee_editor_new') }}">Nouveau</a>
+    <a href="{{ path('esiee_editor_new') }}" class="btn btn-success">
+        <i class="fa fa-plus"></i>
+        Nouveau
+    </a>
 {% endblock %}
