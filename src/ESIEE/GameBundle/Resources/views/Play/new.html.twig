@@ -1,0 +1,19 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <h1>Choisissez un niveau</h1>
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th></th>
+        </tr>
+        {% for level in levels %}
+            <tr>
+                <td>{{ level.name }}</td>
+                <td>
+                    <a href="{{ path('esiee_game_choose_level', {id:game.id, levelId:level.id}) }}">choisir</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * UnitSpeed
  *
  * @ORM\Table(name="esiee_game_unit_speed")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ESIEE\GameBundle\Repository\UnitSpeedRepository")
  */
 class UnitSpeed
 {
@@ -33,7 +33,7 @@ class UnitSpeed
     /**
      * @var Ground
      *
-     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\Ground", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ESIEE\GameBundle\Entity\Ground", inversedBy="speeds", cascade={"persist"})
      * @ORM\JoinColumn(name="ground_id", referencedColumnName="id")
      */
     private $ground;

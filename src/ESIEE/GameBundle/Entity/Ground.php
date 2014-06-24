@@ -40,6 +40,11 @@ class Ground
      */
     private $tileFamilies;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UnitSpeed", mappedBy="unitType", cascade={"persist"})
+     */
+    private $speeds;
+
 
     /**
      * Constructor
@@ -47,6 +52,7 @@ class Ground
     public function __construct()
     {
         $this->tileFamilies = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->speeds = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -136,5 +142,38 @@ class Ground
     public function getTileFamilies()
     {
         return $this->tileFamilies;
+    }
+
+    /**
+     * Add speeds
+     *
+     * @param \ESIEE\GameBundle\Entity\UnitSpeed $speeds
+     * @return UnitType
+     */
+    public function addSpeed(\ESIEE\GameBundle\Entity\UnitSpeed $speeds)
+    {
+        $this->speeds[] = $speeds;
+
+        return $this;
+    }
+
+    /**
+     * Remove speeds
+     *
+     * @param \ESIEE\GameBundle\Entity\UnitSpeed $speeds
+     */
+    public function removeSpeed(\ESIEE\GameBundle\Entity\UnitSpeed $speeds)
+    {
+        $this->speeds->removeElement($speeds);
+    }
+
+    /**
+     * Get speeds
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSpeeds()
+    {
+        return $this->speeds;
     }
 }

@@ -3,6 +3,7 @@
 namespace ESIEE\GameBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * GroundRepository

@@ -16,7 +16,7 @@ class TileFamilyRepository extends EntityRepository
     public function findAllSimple()
     {
         return $this->createQueryBuilder('f')
-            ->select('f.id, f.name')
+            ->select('f.id, f.name, IDENTITY(f.ground) ground')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }

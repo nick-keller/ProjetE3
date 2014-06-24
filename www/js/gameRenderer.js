@@ -2,7 +2,8 @@ $(function(){
     window._gr = {
         map: {
             units: [],
-            highlightedArea: []
+            highlightedArea: [],
+            ground: []
         },
 
         global: {
@@ -19,14 +20,49 @@ $(function(){
          * automaticaly called once
          */
         init: function(){
+            var size = level.mapSize.split(",");
+
+            var tile2ground = function(id){
+                var tile = tiles.filter(function(elem){
+                    return elem.id == id;
+                })[0];
+
+                if(tile === undefined) return 0;
+
+                return tile.ground;
+            };
+
+            _c.setSize({w:size[0], h:size[1]});
+
+            _c.layers.clearBuffer();
             for(var i=0; i<_c.const.world.grid.w; ++i){
                 _gr.map.units.push([]);
                 _gr.map.highlightedArea.push([]);
+                _gr.map.ground.push([]);
                 for(var j=0; j<_c.const.world.grid.h; ++j){
                     _gr.map.units[i].push(null);
                     _gr.map.highlightedArea[i].push(null);
+                    _gr.map.ground[i].push(tile2ground(level.tiles[i][j]));
+
+                    _c.layers.drawTile({
+                        tileId: level.tiles[i][j],
+                        x: i, y: j
+                    });
                 }
             }
+            _c.layers.blitBuffer(_c.layers.background, true);
+
+            // load buildings
+            _c.layers.clearBuffer();
+            for(var i=0; i<_c.const.world.grid.w; ++i){
+                for(var j=0; j<_c.const.world.grid.h; ++j){
+                    _c.layers.drawBuilding({
+                        buildingId: level.buildings[i][j],
+                        x: i, y: j
+                    });
+                }
+            }
+            _c.layers.blitBuffer(_c.layers.buildings, true);
         },
 
         /**

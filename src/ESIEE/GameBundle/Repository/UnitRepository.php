@@ -3,6 +3,7 @@
 namespace ESIEE\GameBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * UnitRepository
@@ -12,4 +13,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class UnitRepository extends EntityRepository
 {
+    public function findAllSimple()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.name, u.description , u.longDescription longDesc, u.power, u.range, u.defence defense')
+            ->addSelect('u.fast, u.attackFirst defender, u.assassin assassin, t.name moveType, u.movement moveValue')
+            ->leftJoin('u.unitType', 't')
+            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }

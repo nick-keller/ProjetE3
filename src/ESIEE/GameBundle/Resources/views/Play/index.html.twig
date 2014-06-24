@@ -1,6 +1,28 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
+    <h1>Parties en cours</h1>
+    <table>
+        <tr>
+            <th>Adversaire</th>
+            <th>Niveau</th>
+            <th></th>
+        </tr>
+        {% for game in games %}
+            <tr>
+                <td>{{ game.opponent }}</td>
+                {% if game.level is null %}
+                    <td>Niveau a choisir</td>
+                {% else %}
+                    <td>{{ game.level.name }}</td>
+                {% endif %}
+                <td>
+                    <a href="{{ path('esiee_game_play', {id:game.id}) }}">reprendre</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
     <h1>Choisissez un adverssaire</h1>
     <table>
         <tr>

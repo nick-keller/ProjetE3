@@ -23,10 +23,10 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/gameRenderer.js') }}"></script>
     <script type="text/javascript">
-        $(function(){
-            _gr.receiveStr(function(data){
-                console.log(data);
-            });
-        });
+        var level = {
+            mapSize: "{{ level.size }}",
+            tiles: {{ level.tiles }},
+            buildings: {{ level.buildings }}
+        }
     </script>
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace ESIEE\GameBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ESIEE\EditorBundle\Entity\Level;
 use ESIEE\UserBundle\Entity\User;
 
 /**
@@ -36,10 +37,18 @@ class Game
      */
     private $opponent;
 
+    /**
+     * @var Level
+     *
+     * @ORM\ManyToOne(targetEntity="ESIEE\EditorBundle\Entity\Level")
+     */
+    private $level;
+
     public function __construct(User $creator = null, User $opponent = null)
     {
         $this->creator = $creator;
         $this->opponent = $opponent;
+        $this->level = null;
     }
 
 
@@ -97,5 +106,21 @@ class Game
     public function getOpponent()
     {
         return $this->opponent;
+    }
+
+    /**
+     * @param \ESIEE\EditorBundle\Entity\Level $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @return \ESIEE\EditorBundle\Entity\Level
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 }

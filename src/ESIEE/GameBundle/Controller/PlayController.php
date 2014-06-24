@@ -34,8 +34,19 @@ class PlayController extends Controller
      */
     public function playAction(Game $game)
     {
+        if($game->getLevel() === null){
+            return $this->render(
+                'ESIEEGameBundle:Play:new.html.twig',
+                array(
+                    'levels' => $this->em->getRepository('ESIEEEditorBundle:Level')->findAll(),
+                    'game' => $game,
+                )
+            );
+        }
+
         return array(
-            'game' => $game
+            'game' => $game,
+            'level' => $game->getLevel(),
         );
     }
 
@@ -49,7 +60,27 @@ class PlayController extends Controller
         $this->em->persist($game);
         $this->em->flush();
 
-        return $this->redirect($this->generateUrl('esiee_game_play', array('id' => $game->getId())));
+        return array(
+            'game' => $game,
+            'levels' => $this->em->getRepository('ESIEEEditorBundle:Level')->findAll(),
+        );
+    }
+
+    public function chooseAction(Game $game, $levelId)
+    {
+        $level = $this->em->getRepository('ESIEEEditorBundle:Level')->findOneById($levelId);
+
+        $game->setLevel($level);
+
+        $this->em->persist($game);
+        $this->em->flush();
+
+        return $this->redirect(
+            $this->generateUrl(
+                'esiee_game_play',
+                array('id' => $game->getId())
+            )
+        );
     }
 
     public function sendAction(Game $game, Request $request)
