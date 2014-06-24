@@ -20,7 +20,10 @@ $(function(){
          * automaticaly called once
          */
         init: function(){
-            var size = level.mapSize.split(",");
+            var match = level.mapSize.match(/^{w:([0-9]+),h:([0-9]+)}$/);
+            console.log(match); /*Debug marker*/
+
+            _c.setSize({w:match[1], h:match[2]});
 
             var tile2ground = function(id){
                 var tile = tiles.filter(function(elem){
@@ -32,14 +35,16 @@ $(function(){
                 return tile.ground;
             };
 
-            _c.setSize({w:size[0], h:size[1]});
 
             _c.layers.clearBuffer();
-            for(var i=0; i<_c.const.world.grid.w; ++i){
+
+
+            console.log("before loop"); /*Debug marker*/
+            for(var i=0; _c.const.world.grid.w > i; i++){
                 _gr.map.units.push([]);
                 _gr.map.highlightedArea.push([]);
                 _gr.map.ground.push([]);
-                for(var j=0; j<_c.const.world.grid.h; ++j){
+                for(var j=0; _c.const.world.grid.h > j; j++){
                     _gr.map.units[i].push(null);
                     _gr.map.highlightedArea[i].push(null);
                     _gr.map.ground[i].push(tile2ground(level.tiles[i][j]));
@@ -50,6 +55,7 @@ $(function(){
                     });
                 }
             }
+            console.log("after loop"); /*Debug marker*/
             _c.layers.blitBuffer(_c.layers.background, true);
 
             // load buildings
@@ -63,6 +69,7 @@ $(function(){
                 }
             }
             _c.layers.blitBuffer(_c.layers.buildings, true);
+            console.log("init finished"); /*Debug marker*/
         },
 
         /**
@@ -114,6 +121,7 @@ $(function(){
          * @param unit an object formatted as follow: {(int) id[, (int) hp, (bool) sleeping, (bool) darkened]}
          */
         addUnit: function(x, y, unit){
+            console.log("Log"); /*Debug marker*/
             unit = _c.setDefaultParams(unit, {
                 hp: null,
                 sleeping: false,
@@ -125,6 +133,7 @@ $(function(){
             unit.createdAt = new Date().getTime();
 
             _gr.map.units[x][y] = unit;
+            console.log("Log end"); /*Debug marker*/
         },
 
         /**
