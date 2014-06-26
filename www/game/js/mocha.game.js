@@ -28,7 +28,8 @@ window._gr = {
   setSleeping: function(){},
   setHP: function(){},
   darkenUnit: function(){},
-  undarkenAll: function(){}
+  undarkenAll: function(){},
+  showMenu: function(){}
 };
 
 

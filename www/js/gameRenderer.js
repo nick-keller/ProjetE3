@@ -65,6 +65,8 @@ $(function(){
             _c.layers.blitBuffer(_c.layers.buildings, true);
         },
 
+        showMenu: function(){},
+
         /**
          * sends a string to the other player via the server
          * see also: receiveStr
