@@ -62,7 +62,7 @@ class Level
     {
         $this->creator = $creator;
         $this->name = 'Mon niveau';
-        $this->size = '{w:20,h:12}';
+        $this->size = '20,12';
 
         $emptyTab = json_encode(array_fill(0, 20, array_fill(0, 12, 0)));
         $this->tiles = $emptyTab;

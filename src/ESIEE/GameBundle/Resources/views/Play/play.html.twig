@@ -21,7 +21,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('js/gameRenderer.js') }}"></script>
     <script type="text/javascript">
         var level = {
             mapSize: "{{ level.size }}",
@@ -29,6 +28,8 @@
             buildings: {{ level.buildings }}
         }
     </script>
+    <script type="text/javascript" src="{{ asset('js/tinycolor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/gameRenderer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('game/js/class/Unit.js') }}"></script>
     <script type="text/javascript" src="{{ asset('game/js/class/Game.js') }}"></script>
     <script type="text/javascript" src="{{ asset('game/js/demo.js') }}"></script>

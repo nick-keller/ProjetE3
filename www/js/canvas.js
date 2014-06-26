@@ -180,7 +180,7 @@ window._c = {
                 x: params.x*32 +2, y: params.y*32 +2,
                 w: 28, h: 28,
                 fill: "#36BC92",
-                stroke: "#05A87A"
+                stroke: "#113D2F"
             });
         }
     },

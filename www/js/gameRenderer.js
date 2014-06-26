@@ -20,10 +20,9 @@ $(function(){
          * automaticaly called once
          */
         init: function(){
-            var match = level.mapSize.match(/^{w:([0-9]+),h:([0-9]+)}$/);
-            console.log(match); /*Debug marker*/
+            var val = level.mapSize.split(",");
 
-            _c.setSize({w:match[1], h:match[2]});
+            _c.setSize({w:val[0], h:val[1]});
 
             var tile2ground = function(id){
                 var tile = tiles.filter(function(elem){
@@ -38,8 +37,6 @@ $(function(){
 
             _c.layers.clearBuffer();
 
-
-            console.log("before loop"); /*Debug marker*/
             for(var i=0; _c.const.world.grid.w > i; i++){
                 _gr.map.units.push([]);
                 _gr.map.highlightedArea.push([]);
@@ -55,7 +52,6 @@ $(function(){
                     });
                 }
             }
-            console.log("after loop"); /*Debug marker*/
             _c.layers.blitBuffer(_c.layers.background, true);
 
             // load buildings
@@ -69,10 +65,15 @@ $(function(){
                 }
             }
             _c.layers.blitBuffer(_c.layers.buildings, true);
-            console.log("init finished"); /*Debug marker*/
         },
 
-        showMenu: function(){},
+        /**
+         *
+         * @param btns an array of butons {(string) name, (bool) disabled, (func) callback}
+         */
+        showMenu: function(btns){
+
+        },
 
         /**
          * sends a string to the other player via the server
@@ -123,7 +124,6 @@ $(function(){
          * @param unit an object formatted as follow: {(int) id[, (int) hp, (bool) sleeping, (bool) darkened]}
          */
         addUnit: function(x, y, unit){
-            console.log("Log"); /*Debug marker*/
             unit = _c.setDefaultParams(unit, {
                 hp: null,
                 sleeping: false,
@@ -134,17 +134,19 @@ $(function(){
             unit.opacity = 0;
             unit.createdAt = new Date().getTime();
 
+            console.log("Add unit", unit); /*Debug marker*/
+
             _gr.map.units[x][y] = unit;
-            console.log("Log end"); /*Debug marker*/
         },
 
         /**
-         * move a unit according to a specific path. The function will not return until the animation is complete.
+         * move a unit according to a specific path
          * @param x
          * @param y
          * @param path [{x, y}, {x, y}, ...]
+         * @param callback
          */
-        moveUnit: function(x, y, path){
+        moveUnit: function(x, y, path, callback){
             _gr.global.movingUnit.unit = _gr.map.units[x][y];
             _gr.map.units[x][y] = null;
 
@@ -152,12 +154,7 @@ $(function(){
             _gr.global.movingUnit.y = y;
             _gr.global.movingUnit.path = path;
             _gr.global.movingUnit.currentNode = 0;
-
-            while(_gr.global.movingUnit.currentNode < path.length);
-
-            var lastNode = path[path.length - 1];
-            _gr.map.units[lastNode.x][lastNode.y] = _gr.global.movingUnit.unit;
-            _gr.global.movingUnit.unit = null;
+            _gr.global.movingUnit.callback = callback;
         },
 
         /**
@@ -204,7 +201,14 @@ $(function(){
          * @param color2 if specified, the highlight will alternate between color1 and color2
          */
         highlightCell: function(x, y, color1, color2){
-            // TODO
+            var c1 = tinycolor(color1);
+            var c2 = tinycolor(c1.toRgb());
+            c2.setAlpha(c1.getAlpha() *.5);
+
+            if(color2 != undefined)
+                c2 = tinycolor(color2);
+
+            _gr.map.highlightedArea[x][y] = {c1: c1,c2:c2};
         },
 
         /**
@@ -213,14 +217,18 @@ $(function(){
          * @param y
          */
         unHighlightCell: function(x, y){
-            // TODO
+            _gr.map.highlightedArea[x][y] = null;
         },
 
         /**
          * unhighlight all cells
          */
         unHighlightAll: function(){
-            // TODO
+            for(var x=0; x<_c.const.world.grid.w; ++x){
+                for(var y=0; y<_c.const.world.grid.h; ++y){
+                    _gr.map.highlightedArea[x][y] = null;
+                }
+            }
         },
 
         /**
@@ -283,7 +291,7 @@ $(function(){
 
                 // Fade in animation
                 if(unit.hasOwnProperty("opacity")){
-                    unit.opacity = Math.min(1, e.time - unit.createdAt / 1000);
+                    unit.opacity = Math.min(1, (e.time - unit.createdAt) / 1000);
 
                     _c.layers.buffer.save();
                     _c.layers.buffer.globalAlpha = unit.opacity;
@@ -315,34 +323,44 @@ $(function(){
         if(_gr.global.movingUnit.unit !== null){
             var u = _gr.global.movingUnit;
 
-            // We reached the node, let's move to the next one
-            if(u.x == u.path[u.currentNode].x && u.y == u.path[u.currentNode].y)
-                u.currentNode++;
+            if(u.currentNode == u.path.length){
+                var lastNode = u.path[u.path.length - 1];
+                _gr.map.units[lastNode.x][lastNode.y] = u;
+                _gr.global.movingUnit.unit = null;
 
-            // We did not reach the last one yet
-            if(u.currentNode < u.path.length){
-                var target = u.path[u.currentNode];
-
-                var toTarget = {
-                    x: target.x - u.x,
-                    y: target.y - u.y
-                };
-
-                var move = {
-                    x: toTarget.x == 0 ? 0 : toTarget.x > 0 ? 1 : -1,
-                    y: toTarget.y == 0 ? 0 : toTarget.y > 0 ? 1 : -1
-                };
-
-                move.x *= e.delta;
-                move.y *= e.delta;
-
-                if(Math.abs(toTarget.x) < Math.abs(move.x)) move.x = toTarget.x;
-                if(Math.abs(toTarget.y) < Math.abs(move.y)) move.y = toTarget.y;
-
-                u.x += move.x;
-                u.y += move.y;
+                if(_gr.global.movingUnit.callback != undefined)
+                    _gr.global.movingUnit.callback();
             }
+            else{
 
+                // We reached the node, let's move to the next one
+                if(u.x == u.path[u.currentNode].x && u.y == u.path[u.currentNode].y)
+                    u.currentNode++;
+
+                // We did not reach the last one yet
+                if(u.currentNode < u.path.length){
+                    var target = u.path[u.currentNode];
+
+                    var toTarget = {
+                        x: target.x - u.x,
+                        y: target.y - u.y
+                    };
+
+                    var move = {
+                        x: toTarget.x == 0 ? 0 : toTarget.x > 0 ? 1 : -1,
+                        y: toTarget.y == 0 ? 0 : toTarget.y > 0 ? 1 : -1
+                    };
+
+                    move.x *= e.delta;
+                    move.y *= e.delta;
+
+                    if(Math.abs(toTarget.x) < Math.abs(move.x)) move.x = toTarget.x;
+                    if(Math.abs(toTarget.y) < Math.abs(move.y)) move.y = toTarget.y;
+
+                    u.x += move.x;
+                    u.y += move.y;
+                }
+            }
             _c.layers.drawUnit({
                 unit: u.unit,
                 x: u.x,
@@ -351,5 +369,48 @@ $(function(){
         }
 
         _c.layers.blitBuffer(_c.layers.units, true);
+
+
+        _c.layers.clearBuffer();
+
+        /**
+         * Loop for highlight
+         */
+        var area;
+        for(var x=0; x<_c.const.world.grid.w; ++x){
+            for(var y=0; y<_c.const.world.grid.h; ++y){
+                area = _gr.map.highlightedArea[x][y];
+                if(area == null) continue;
+
+                _c.layers.drawRect({
+                    x: x*32, y: y*32,
+                    w:33, h:33,
+                    fill: tinycolor.mix(area.c1, area.c2, e.halfLoop*100).toRgbString(),
+                    stroke: tinycolor.darken(tinycolor.mix(area.c1, area.c2, e.halfLoop*100), 60).toRgbString()
+                })
+            }
+        }
+        _c.layers.blitBuffer(_c.layers.ui, true);
     });
+
+    _gr.addUnit(0,0,{});
+    _gr.addUnit(0,1,{});
+    _gr.addUnit(1,3,{});
+    _gr.highlightCell(1, 0, "rgba(255,0,0,.6)");
+    _gr.highlightCell(2, 0, "rgba(255,0,0,.6)", "rgba(0,255,0,.6)");
+    _gr.highlightCell(3, 0, "rgba(0,255,0,.3)", "rgba(0,255,0,.6)");
+    setTimeout(function(){
+        _gr.unHighlightAll();
+        _gr.moveUnit(0, 0, [
+            {x:0, y:2},
+            {x:1, y:2},
+            {x:1, y:3},
+            {x:3, y:3}
+        ], function(){
+            _gr.moveUnit(0, 1, [
+                {x:2, y:1},
+                {x:2, y:2}
+            ])
+        });
+    }, 300);
 });
