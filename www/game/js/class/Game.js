@@ -52,18 +52,18 @@ function Game(pMap, pPlayers, pUnits) {
 	];
 
 
-	this.defaultUnits = [];
-	this.defaultUnits.push($.extend(true, {}, this.defaultUnit));
-	this.defaultUnits.push($.extend(true, {}, this.defaultUnit));
-	this.defaultUnits[0].x = 0;
-	this.defaultUnits[0].y = 0;
-	this.defaultUnits[0].player = 0;
-	this.defaultUnits[1].x = 0;
-	this.defaultUnits[1].y = 2;
+    this.defaultUnits = [];
+    this.defaultUnits.push($.extend(true, {}, this.defaultUnit));
+    this.defaultUnits.push($.extend(true, {}, this.defaultUnit));
+    this.defaultUnits[0].x = 0;
+    this.defaultUnits[0].y = 0;
+    this.defaultUnits[0].player = 0;
+    this.defaultUnits[1].x = 0;
+    this.defaultUnits[1].y = 2;
 	this.defaultUnits[1].player = 1;
 
 
-	this.map = pMap || this.defaultMap;
+    this.map = pMap || this.defaultMap;
 	this.units = pUnits || this.defaultUnits;
 
 	this.size = Math.pow(10, Math.max(
@@ -72,9 +72,9 @@ function Game(pMap, pPlayers, pUnits) {
 	) + 1);
 
 
-	for (var i = this.units.length - 1; i >= 0; i--) {
-		new Unit(this.units[i], this.units[i].x, this.units[i].y, this.units[i].player);
-	}
+    for (var i = this.units.length - 1; i >= 0; i--) {
+        new Unit(this.units[i], this.units[i].x, this.units[i].y, this.units[i].player);
+    }
 
 
 	_gr.showMenu({name:"Player "+(this.turn-1), disabled: true, callback:function(){}},
