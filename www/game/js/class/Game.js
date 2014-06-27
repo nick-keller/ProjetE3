@@ -101,7 +101,7 @@ Game.prototype.onClick = function(e) {
 							_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, null, "rgba(188,54,54,.6)", null);
 						}
 					}
-
+					
 					if (unit.moved === false) {
 						for (var i in _g.clickState.moveableCells) {
 							if (_g.clickState.attCells[i] !== undefined) {
@@ -111,6 +111,7 @@ Game.prototype.onClick = function(e) {
 							}
 						}
 					}
+
 
 					_gr.unHighlightCell(unit.x, unit.y);
 

@@ -297,27 +297,27 @@ Unit.prototype.attack = function(unitB) {
 	var unitA = this;
 
 	if (unitA.player !== _g.turn) {
-		throw new Error("This is not this unit's turn");
 		_g.clickState = {state: null};
+		throw new Error("This is not this unit's turn");
 	}
 
 	if (unitA.attacked === true) {
-		throw new Error("This unit already attacked");
 		_g.clickState = {state: null};
+		throw new Error("This unit already attacked");
 	}
 
 	var dist = Math.abs(unitB.x - unitA.x) + Math.abs(unitB.y - unitA.y);
 
 	var hitBack = (unitB.range >= dist) && !unitB.resting;
 
-	if (unitA.range <= dist) {
-		throw new Error("Insufficient range");
+	if (unitA.range > dist) {
 		_g.clickState = {state: null};
+		throw new Error("Insufficient range");
 	}
 
 	if (unitB.player === unitA.player) {
-		throw new Error("Attacking your own unit would be pretty stupid");
 		_g.clickState = {state: null};
+		throw new Error("Attacking your own unit would be pretty stupid");
 	}
 
 	unitA.attacked = true;
