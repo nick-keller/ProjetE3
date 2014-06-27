@@ -230,7 +230,7 @@ window._c = {
                 params.layer.save();
             }
 
-            if(params.unit.hp != null){
+            if(params.unit.hp != null && params.unit.hp  < 10){
                 _c.layers.drawRect({
                     x: params.x*32 + 32 - 7,
                     y: params.y*32 + 32 - 9,
