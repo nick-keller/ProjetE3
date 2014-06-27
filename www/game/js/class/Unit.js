@@ -164,10 +164,10 @@ Unit.prototype.moveToCell = function(px, py, mc) {
 		throw new Error("There is already an unit in the cell " + px + ";" + py);
 	}
 
-	if (Math.abs(this.x - px) + Math.abs(this.y - py) > this.moveValue) {
-		_g.clickState = {state: null};
-		throw new Error("Impossible to move this far");
-	}
+//	if (Math.abs(this.x - px) + Math.abs(this.y - py) > this.moveValue) {
+//		_g.clickState = {state: null};
+//		throw new Error("Impossible to move this far");
+//	}
 
 	var path = [];
 
