@@ -212,21 +212,29 @@
 
 			var cost = _g.map[tx][ty].terrain.moveFactor[this.moveType];
 
+			console.log("y--"); /*Debug marker*/
+			console.log((mc[tx * _g.size + ty - 1] + cost)+" === "+remaining); /*Debug marker*/
 			if (mc[tx * _g.size + ty - 1] + cost === remaining) {
 				ty--;
 				continue;
 			}
 
+			console.log("y++"); /*Debug marker*/
+			console.log((mc[tx * _g.size + ty + 1] + cost)+" === "+remaining); /*Debug marker*/
 			if (mc[tx * _g.size + ty + 1] + cost === remaining) {
 				ty++;
 				continue;
 			}
 
+			console.log("x--"); /*Debug marker*/
+			console.log((mc[tx * _g.size + ty - 1 * _g.size] + cost)+" === "+remaining); /*Debug marker*/
 			if (mc[tx * _g.size + ty - 1 * _g.size] + cost === remaining) {
 				tx--;
 				continue;
 			}
 
+			console.log("x++"); /*Debug marker*/
+			console.log((mc[tx * _g.size + ty + 1 * _g.size] + cost)+" === "+remaining); /*Debug marker*/
 			if (mc[tx * _g.size + ty + 1 * _g.size] + cost === remaining) {
 				tx++;
 				continue;
