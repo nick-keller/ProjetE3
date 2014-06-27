@@ -171,10 +171,6 @@ window._c = {
         drawUnit: function(params){
             params = _c.setDefaultParams(params, {
                 layer: _c.layers.buffer,
-                unit: {
-                    id:1,
-                    dir: "right"
-                },
                 x: 0, y: 0,
                 frame: 0
             });
@@ -183,6 +179,10 @@ window._c = {
             var unit = _c.const.data.units.filter(function(e){
                 return e.id == params.unit.id;
             });
+
+            if(params.unit.sleeping){
+                params.frame = 1;
+            }
 
             if(unit.length != 1) return;
             unit = unit[0];
@@ -225,17 +225,24 @@ window._c = {
                 });
 
                 realLayer.drawImage(_c.canvas.buffer2[0], 0, 0);
+                params.layer.restore();
                 params.layer = realLayer;
+                params.layer.save();
             }
 
             if(params.unit.hp != null){
                 _c.layers.drawRect({
-                    x: params.x*32,
-                    y: params.y*32,
-                    w: 5,
-                    h: 7,
+                    x: params.x*32 + 32 - 7,
+                    y: params.y*32 + 32 - 9,
+                    w: 7,
+                    h: 9,
                     fill: "black"
                 });
+
+                params.layer.font="10px Arial";
+                params.layer.textAlign ="center";
+                params.layer.fillStyle = "white";
+                params.layer.fillText(params.unit.hp,params.x*32 + 29,params.y*32 + 31);
             }
 
             params.layer.restore();
