@@ -196,7 +196,7 @@
 
 		var tx = px;
 		var ty = py;
-		var remaining = mc[x * _g.size + y];
+		var remaining = mc[tx * _g.size + ty];
 
 		while (tx !== this.x && ty !== this.y) {
 
@@ -206,8 +206,8 @@
 				x: ty,
 				y: tx
 			});
-            console.log(x, y);
-			var cost = _g.map[x][y].terrain.moveFactor[this.moveType];
+            console.log(x, y, mc);
+			var cost = _g.map[tx][ty].terrain.moveFactor[this.moveType];
 
 			if (mc[tx * _g.size + ty - 1] + cost === remaining) {
 				ty--;
@@ -228,6 +228,7 @@
 				tx++;
 				continue;
 			}
+			throw new Error("Erreur dans le pathfinding");
 		}
 
 		_gr.moveUnit(this.y, this.x, path, function(){
