@@ -110,16 +110,18 @@ Game.prototype.onClick = function(e) {
 					_g.clickState.attCells = unit.getAttCells();
                     console.log(_g.clickState.moveableCells);
 					// TODO: menu
+
+                    for (var i in _g.clickState.attCells) {
+                        _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), null, "rgba(188,54,54,.6)");
+                    }
+                    
 					for (var i in _g.clickState.moveableCells) {
 						if (_g.clickState.attCells[i] !== undefined) {
+                            console.log('gfsd');
 							_gr.highlightCell(i % _g.size, Math.floor(i / _g.size), "rgba(54,148,188,.6)", "rgba(188,54,54,.6)");
 						} else {
                             _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), "rgba(54,148,188,.6)", null);
 						}
-					}
-
-					for (var i in _g.clickState.attCells) {
-                        _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), null, "rgba(188,54,54,.6)");
 					}
 
 
