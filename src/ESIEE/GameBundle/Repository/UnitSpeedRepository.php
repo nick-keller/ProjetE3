@@ -11,7 +11,7 @@ class UnitSpeedRepository  extends EntityRepository
     public function findAllSimple()
     {
         $data = $this->createQueryBuilder('s')
-            ->select('g.id, g.name, g.protection, s.cost, u.name unit')
+            ->select('g.id, g.name, g.protection, s.cost, u.name unit, s.id sid')
             ->join('s.ground', 'g')
             ->join('s.unitType', 'u')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);

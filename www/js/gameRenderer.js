@@ -461,4 +461,8 @@ $(function(){
 //            })
 //        });
 //    }, 4000);
+
+    $('#cycle-turn').click(function(){
+        _g.cycleTurn();
+    })
 });

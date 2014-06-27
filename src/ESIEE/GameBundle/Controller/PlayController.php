@@ -47,6 +47,7 @@ class PlayController extends Controller
         return array(
             'game' => $game,
             'level' => $game->getLevel(),
+            'lol' => $this->em->getRepository('ESIEEGameBundle:UnitSpeed')->findAllSimple(),
         );
     }
 
