@@ -147,6 +147,7 @@ $(function(){
          * @param callback
          */
         moveUnit: function(x, y, path, callback){
+            console.log(path);
             _gr.global.movingUnit.unit = _gr.map.units[x][y];
             _gr.map.units[x][y] = null;
 
@@ -164,6 +165,7 @@ $(function(){
          * @param callback
          */
         killUnit: function(x, y, callback){
+            if(callback != undefined)
             callback();
             // TODO
         },
@@ -175,6 +177,7 @@ $(function(){
          * @param callback
          */
         attackUnit: function(attacker, target, callback){
+            if(callback != undefined)
             callback();
             // TODO
         },
@@ -186,6 +189,7 @@ $(function(){
          * @param callback
          */
         showDefenseAnim: function(x, y, callback){
+            if(callback != undefined)
             callback();
             // TODO
         },
@@ -197,6 +201,7 @@ $(function(){
          * @param callback
          */
         showAssassinAnim: function(x, y, callback){
+            if(callback != undefined)
             callback();
             // TODO
         },
