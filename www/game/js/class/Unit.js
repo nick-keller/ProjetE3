@@ -107,17 +107,17 @@
 			if (x >= maxX || y >= maxY || x < 0 || y < 0)
 				return;
 
-			var tmpRemain = remaining - _g.map[x][y].terrain.moveFactor[unit.moveType];
-
 			if (_g.map[x][y].unit !== null)
 				if (_g.map[x][y].unit.player !== _g.turn)
 					return;
 
-			if (tmpRemain < 0)
+			if (remain < 0)
 				return;
 
 			if (cells[x * size + y] >= tmpRemain)
 				return;
+
+			var tmpRemain = remaining - _g.map[x][y].terrain.moveFactor[unit.moveType];
 
 			cells[x * size + y] = tmpRemain;
 
@@ -194,35 +194,38 @@
 
 		var path = [];
 
-		var x = px;
-		var y = py;
+		var tx = px;
+		var ty = py;
 		var remaining = mc[x * _g.size + y];
 
-		while (x !== this.x && y !== this.y) {
+		while (tx !== this.x && ty !== this.y) {
+
+			console.log("tx="+tx+", ty="+ty); /*Debug marker*/
+
 			path.unshift({
-				x: y,
-				y: x
+				x: ty,
+				y: tx
 			});
 
 			var cost = _g.map[x][y].terrain.moveFactor[this.moveType];
 
-			if (mc[x * _g.size + y - 1] + cost === remaining) {
-				y--;
+			if (mc[tx * _g.size + ty - 1] + cost === remaining) {
+				ty--;
 				continue;
 			}
 
-			if (mc[x * _g.size + y + 1] + cost === remaining) {
-				y++;
+			if (mc[tx * _g.size + ty + 1] + cost === remaining) {
+				ty++;
 				continue;
 			}
 
-			if (mc[x * _g.size + y - 1 * _g.size] + cost === remaining) {
-				x--;
+			if (mc[tx * _g.size + ty - 1 * _g.size] + cost === remaining) {
+				tx--;
 				continue;
 			}
 
-			if (mc[x * _g.size + y + 1 * _g.size] + cost === remaining) {
-				x++;
+			if (mc[tx * _g.size + ty + 1 * _g.size] + cost === remaining) {
+				tx++;
 				continue;
 			}
 		}
