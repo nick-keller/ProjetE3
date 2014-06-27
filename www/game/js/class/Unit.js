@@ -36,7 +36,7 @@
 		// To execute at initialization
 		_g.map[this.x][this.y].unit = this;
 
-		_gr.addUnit(this.y, this.x, {id:this.unitTypeId, color:player === 0?'red':'blue'});
+		_gr.addUnit(this.x, this.y, {id:this.unitTypeId, color:player === 0?'red':'blue'});
 		_g.unitStorage[this.player][this.id] = {
 			x: this.x,
 			y: this.y
@@ -65,7 +65,7 @@
 		this.attacked = true;
 		this.moved = true;
 
-		_gr.darkenUnit(this.y, this.x);
+		_gr.darkenUnit(this.x, this.y);
 		return false;
 	};
 
@@ -84,7 +84,7 @@
 		this.attacked = true;
 		this.moved = true;
 
-		_gr.darkenUnit(this.y, this.x);
+		_gr.darkenUnit(this.x, this.y);
 		return false;
 	};
 
@@ -232,9 +232,9 @@
 			throw new Error("Erreur dans le pathfinding");
 		}
 
-		_gr.moveUnit(this.y, this.x, path, function(){
+		_gr.moveUnit(this.x, this.y, path, function(){
 			if (this.attacked === true)
-				_gr.darkenUnit(py, px);
+				_gr.darkenUnit(px, py);
 		});
 
 		var tmp = _g.map[this.x][this.y].unit;
@@ -290,18 +290,18 @@
 			if (unitA.fast === true)
 				unitA.moved = false;
 			else
-				_gr.darkenUnit(unitA.y, unitA.x);
+				_gr.darkenUnit(unitA.x, unitA.y);
 			return false;
 		}
 
 		if (unitB.defender || unitB.guarding) {
-			_gr.showDefenseAnim(unitB.y, unitB.x);
+			_gr.showDefenseAnim(unitB.x unitB.y);
 
 			if (unitA.assassin === false) {
 				if (unitB.dealDamage(unitA) === false)
 					unitA.dealDamage(unitB);
 			} else {
-				_gr.showAssassinAnim(unitA.y, unitA.x);
+				_gr.showAssassinAnim(unitA.x, unitA.y);
 				if (unitA.dealDamage(unitB) === false)
 					unitB.dealDamage(unitA);
 			}
@@ -313,7 +313,7 @@
 		if (unitA.fast === true)
 			unitA.moved = false;
 		else
-			_gr.darkenUnit(unitA.y, unitA.x);
+			_gr.darkenUnit(unitA.x, unitA.y);
 
 		return false;
 	}; // attack
@@ -347,11 +347,11 @@
 
 
 		_gr.attackUnit({
-			x: attacker.y,
-			y: attacker.x
+			x: attacker.x,
+			y: attacker.y
 		}, {
-			x: target.y,
-			y: target.x
+			x: target.x,
+			y: target.y
 		});
 
 		if (target.health <= 0.0) {
@@ -369,7 +369,7 @@
 	 */
 	Unit.prototype.destroy = function() {
 
-		_gr.killUnit(this.y, this.x);
+		_gr.killUnit(this.x, this.y);
 
 		delete _g.unitStorage[this.player][this.id];
 
