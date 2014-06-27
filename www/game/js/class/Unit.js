@@ -285,9 +285,11 @@
 
 		unitA.attacked = true;
 
+		console.log(hitBack); /*Debug marker*/
+
 		if (hitBack === false) {
 			unitA.dealDamage(unitB);
-			
+
 			if (unitA.fast === true)
 				unitA.moved = false;
 
@@ -357,6 +359,8 @@
 			x: target.x,
 			y: target.y
 		});
+
+		_gr.sethp(target.x, target.y, Math.floor(target.hp));
 
 		if (target.health <= 0.0) {
 			target.destroy();

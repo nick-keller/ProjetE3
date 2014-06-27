@@ -38,7 +38,7 @@ function Game(pMap, pPlayers, pUnits) {
 		"defender": false,
 		"assassin": false,
 		"moveType": "foot",
-		"moveValue": 2
+		"moveValue": 3
 	};
 
 	this.unitStorage = {0: {}, 1: {}};
