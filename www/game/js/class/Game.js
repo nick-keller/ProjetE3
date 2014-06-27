@@ -94,8 +94,7 @@ Game.prototype.onClick = function(e) {
 	var x = e.grid.y;
 	var y = e.grid.x;
 
-	var cl = JSON.parse(JSON.stringify(_g.clickState));
-	switch (cl.state) {
+	switch (_g.clickState.state) {
 
 		case null:
 			if (_g.map[x][y].unit !== null) {
@@ -131,20 +130,20 @@ Game.prototype.onClick = function(e) {
 
 		case "ownUnit":
 
-			if (cl.moveableCells[x * _g.size + y] !== undefined) {
+			if (_g.clickState.moveableCells[x * _g.size + y] !== undefined) {
 				_gr.unHighlightAll();
-				cl.unit.moveToCell(y, x, cl.moveableCells);
+				_g.clickState.unit.moveToCell(y, x, _g.clickState.moveableCells);
 				_g.clickState = {
 					state: null
 				};
 				return;
 			}
 
-			if (cl.attCells[x * _g.size + y] !== undefined &&
+			if (_g.clickState.attCells[x * _g.size + y] !== undefined &&
 				_g.map[x][y].unit !== null &&
 				_g.map[x][y].unit.player !== _g.turn) {
 				_gr.unHighlightAll();
-				cl.unit.attack(_g.map[x][y].unit);
+				_g.clickState.unit.attack(_g.map[x][y].unit);
 				_g.clickState = {
 					state: null
 				};
