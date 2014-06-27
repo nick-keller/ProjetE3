@@ -149,17 +149,25 @@ Unit.prototype.getMoveableCells = function() {
  */
 Unit.prototype.moveToCell = function(px, py, mc) {
 
-	if (this.player !== _g.turn)
+	if (this.player !== _g.turn) {
 		throw new Error("This is not this unit's turn");
+		_g.clickState = {state: null};
+	}
 
-	if (this.moved === true)
+	if (this.moved === true) {
 		throw new Error("This unit already has moved");
+		_g.clickState = {state: null};
+	}
 
-	if (_g.map[px][py].unit !== null)
+	if (_g.map[px][py].unit !== null) {
 		throw new Error("There is already an unit in the cell " + px + ";" + py);
+		_g.clickState = {state: null};
+	}
 
-	if (Math.abs(this.x - px) + Math.abs(this.y - py) > this.moveValue)
+	if (Math.abs(this.x - px) + Math.abs(this.y - py) > this.moveValue) {
 		throw new Error("Impossible to move this far");
+		_g.clickState = {state: null};
+	}
 
 	var path = [];
 
@@ -288,21 +296,29 @@ Unit.prototype.getAttCells = function() {
 Unit.prototype.attack = function(unitB) {
 	var unitA = this;
 
-	if (unitA.player !== _g.turn)
+	if (unitA.player !== _g.turn) {
 		throw new Error("This is not this unit's turn");
+		_g.clickState = {state: null};
+	}
 
-	if (unitA.attacked === true)
+	if (unitA.attacked === true) {
 		throw new Error("This unit already attacked");
+		_g.clickState = {state: null};
+	}
 
 	var dist = Math.abs(unitB.x - unitA.x) + Math.abs(unitB.y - unitA.y);
 
 	var hitBack = (unitB.range >= dist) && !unitB.resting;
 
-	if (unitA.range <= dist)
+	if (unitA.range <= dist) {
 		throw new Error("Insufficient range");
+		_g.clickState = {state: null};
+	}
 
-	if (unitB.player === unitA.player)
+	if (unitB.player === unitA.player) {
 		throw new Error("Attacking your own unit would be pretty stupid");
+		_g.clickState = {state: null};
+	}
 
 	unitA.attacked = true;
 
@@ -379,7 +395,7 @@ Unit.prototype.dealDamage = function(target) {
 		y: target.y
 	});
 
-	_gr.setHP(target.x, target.y, Math.floor(target.hp));
+	_gr.setHP(target.x, target.y, Math.round(target.hp));
 
 	if (target.health <= 0.0) {
 		target.destroy();
@@ -395,6 +411,7 @@ Unit.prototype.dealDamage = function(target) {
  * @return {Bool/Error}; Returns false if sucessfull, else error
  */
 Unit.prototype.destroy = function() {
+	console.log("unit killed"); /*Debug marker*/
 
 	_gr.killUnit(this.x, this.y);
 

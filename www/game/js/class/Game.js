@@ -31,7 +31,7 @@ function Game(pMap, pPlayers, pUnits) {
 		"name": "Bazooka",
 		"desc": "Bazooka",
 		"longDesc": "A bazooka",
-		"power": 1,
+		"power": 4,
 		"range": 3,
 		"defense": 0,
 		"fast": false,
@@ -109,18 +109,23 @@ Game.prototype.onClick = function(e) {
 					_g.clickState.attCells = unit.getAttCells();
 					// TODO: menu
 
-                    for (var i in _g.clickState.attCells) {
-                        _gr.highlightCell(Math.floor(i / _g.size), i % _g.size, null, "rgba(188,54,54,.6)");
-                    }
-
-					for (var i in _g.clickState.moveableCells) {
-						if (_g.clickState.attCells[i] !== undefined) {
-							_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", "rgba(188,54,54,.6)");
-						} else {
-                            _gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", null);
+					if (unit.attacked === false) {
+						for (var i in _g.clickState.attCells) {
+							_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, null, "rgba(188,54,54,.6)", null);
 						}
 					}
 
+					if (unit.moved === false) {
+						for (var i in _g.clickState.moveableCells) {
+							if (_g.clickState.attCells[i] !== undefined) {
+								_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", "rgba(188,54,54,.6)");
+							} else if (unit.attacked === false) {
+								_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", null);
+							}
+						}
+					}
+
+					_gr.unHighlightCell(unit.x, unit.y);
 
 				}
 			}
@@ -131,9 +136,7 @@ Game.prototype.onClick = function(e) {
 			if (_g.clickState.moveableCells[x * _g.size + y] !== undefined) {
 				_gr.unHighlightAll();
 				_g.clickState.unit.moveToCell(x, y, _g.clickState.moveableCells);
-				_g.clickState = {
-					state: null
-				};
+				_g.clickState = {state: null};
 				return;
 			}
 
@@ -142,17 +145,13 @@ Game.prototype.onClick = function(e) {
 				_g.map[x][y].unit.player !== _g.turn) {
 				_gr.unHighlightAll();
 				_g.clickState.unit.attack(_g.map[x][y].unit);
-				_g.clickState = {
-					state: null
-				};
+				_g.clickState = {state: null};
 				return;
 			}
 
 
 			_gr.unHighlightAll();
-			_g.clickState = {
-				state: null
-			};
+			_g.clickState = {state: null};
 			return;
 
 		default:
