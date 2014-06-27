@@ -198,15 +198,18 @@
 		var ty = py;
 		var remaining = mc[tx * _g.size + ty];
 
-		while (tx !== this.x && ty !== this.y) {
+        console.log("tx="+tx+", ty="+ty); /*Debug marker*/
+        console.log(this.x, this.y); /*Debug marker*/
+		while (tx !== this.x || ty !== this.y) {
 
-			console.log("tx="+tx+", ty="+ty); /*Debug marker*/
 
 			path.unshift({
 				x: ty,
 				y: tx
 			});
-            console.log(x, y, mc);
+
+            console.log(tx, ty, mc);
+
 			var cost = _g.map[tx][ty].terrain.moveFactor[this.moveType];
 
 			if (mc[tx * _g.size + ty - 1] + cost === remaining) {
