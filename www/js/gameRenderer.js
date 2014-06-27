@@ -165,6 +165,8 @@ $(function(){
          * @param callback
          */
         killUnit: function(x, y, callback){
+            _gr.map.units[x][y] = null;
+
             if(callback != undefined)
             callback();
             // TODO
