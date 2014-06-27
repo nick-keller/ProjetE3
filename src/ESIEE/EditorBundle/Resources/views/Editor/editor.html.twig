@@ -15,7 +15,8 @@
         var level = {
             mapSize: "{{ level.size }}",
             tiles: {{ level.tiles }},
-            buildings: {{ level.buildings }}
+            buildings: {{ level.buildings }},
+            units: {{ level.units|raw }}
         }
     </script>
 {% endblock %}

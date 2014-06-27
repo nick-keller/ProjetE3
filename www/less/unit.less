@@ -1,0 +1,25 @@
+.unit{
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    z-index: 1;
+
+    background: url('../spritesheet/unitsx2.png');
+
+    .i-loop (@i) when (@i > 0) {
+
+        .j-loop (@j) when (@j > 0) {
+            @x = @i - 1;
+            @y = @j - 1;
+            &.unit@{x}-@{y} {background-position: -@x * 192px -@y * 192px;}
+
+            .j-loop(@j - 1);
+        }
+        .j-loop (0) {}
+        .j-loop(8);
+
+        .i-loop(@i - 1);
+    }
+    .i-loop (0) {}
+    .i-loop(8);
+}

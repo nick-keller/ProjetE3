@@ -17,7 +17,7 @@
                 <canvas data-layer="ui"></canvas>
             </div>
         </div>
-        <button class="btn btn-primary" id="cycle-turn">
+        <button class="btn btn-primary" id="cycle-turn" style="margin-top: 10px">
             Finir le tour
         </button>
     </div>
@@ -29,7 +29,8 @@
         var level = {
             mapSize: "{{ level.size }}",
             tiles: {{ level.tiles }},
-            buildings: {{ level.buildings }}
+            buildings: {{ level.buildings }},
+            units: {{ level.units|raw }}
         }
     </script>
     <script type="text/javascript" src="{{ asset('js/tinycolor.js') }}"></script>

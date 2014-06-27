@@ -4,12 +4,15 @@ $(function(){
             editorMode: null,
             tile: 1,
             tileFamily: 1,
-            building: 1
+            building: 1,
+            unit: 1,
+            player: 0
         },
         map: {
             family: [],
             tile: [],
-            building: []
+            building: [],
+            unit: []
         }
     };
 
@@ -24,17 +27,20 @@ $(function(){
         _e.map = {
             family: [],
             tile: [],
-            building: []
+            building: [],
+            unit: []
         };
 
         for(var i=0; i<_c.const.world.grid.w; ++i){
             _e.map.family.push([]);
             _e.map.tile.push([]);
             _e.map.building.push([]);
+            _e.map.unit.push([]);
             for(var j=0; j<_c.const.world.grid.h; ++j){
                 _e.map.family[i].push(0);
                 _e.map.tile[i].push(0);
                 _e.map.building[i].push(0);
+                _e.map.unit[i].push(null);
             }
         }
     }).val(level.mapSize).change();
@@ -47,6 +53,7 @@ $(function(){
         $.post(url,{
             tiles: JSON.stringify(_e.map.tile),
             buildings: JSON.stringify(_e.map.building),
+            units: JSON.stringify(_e.map.unit),
             name: $('#name').val(),
             size: $('#input-map-size').val()
         }, function(){
@@ -56,6 +63,7 @@ $(function(){
 
     _e.map.tile = level.tiles;
     _e.map.building = level.buildings;
+    _e.map.unit = level.units;
 
     // load tiles
     _c.layers.clearBuffer();
@@ -87,6 +95,27 @@ $(function(){
     }
     _c.layers.blitBuffer(_c.layers.buildings, true);
 
+    // load units
+    _c.layers.clearBuffer();
+    for(var i=0; i<_c.const.world.grid.w; ++i){
+        for(var j=0; j<_c.const.world.grid.h; ++j){
+            if(_e.map.unit[i][j] == null) continue;
+
+            _c.layers.drawUnit({
+                unit: {
+                    id: _e.map.unit[i][j].id,
+                    sleeping: true,
+                    darkened: false,
+                    dir: _e.map.unit[i][j].player == 0 ? "right": "left",
+                    color: _e.map.unit[i][j].player == 0 ? "red": "blue",
+                    hp: null
+                },
+                x: i, y: j
+            });
+        }
+    }
+    _c.layers.blitBuffer(_c.layers.units, true);
+
     $menu.find('.tile').click(function(){
         var $this = $(this);
         $menu.find('.tile').removeClass('active');
@@ -102,6 +131,15 @@ $(function(){
         $this.addClass('active');
 
         _e.current.building = $this.data('id');
+    });
+
+    $menu.find('.unit').click(function(){
+        var $this = $(this);
+        $menu.find('.unit').removeClass('active');
+        $this.addClass('active');
+
+        _e.current.unit = $this.data('id');
+        _e.current.player = $this.data('player');
     });
 
     $menu.find('[data-tab-container="main-menu"] [data-target]').click(function(){
@@ -146,6 +184,39 @@ $(function(){
                 _c.layers.drawBuilding({
                     x: e.grid.x, y: e.grid.y,
                     buildingId: _e.current.building
+                });
+            }
+            else{
+                _c.layers.drawRect({
+                    x: e.grid.x *32, y: e.grid.y *32, w: 32, h: 32,
+                    fill: 'rgba(255,0,0,.3)',
+                    stroke: 'rgba(255,0,0,.7)'
+                });
+            }
+
+            _c.layers.blitBuffer(_c.layers.ui, true);
+        }
+
+        if(_e.current.editorMode == 'units'){
+            _c.layers.clearBuffer();
+
+            if(_e.map.unit[e.grid.x][e.grid.y] == null){
+                _c.layers.drawRect({
+                    x: e.grid.x *32, y: e.grid.y *32, w: 32, h: 32,
+                    fill: 'rgba(0,255,0,.3)',
+                    stroke: 'rgba(0,255,0,.7)'
+                });
+
+                _c.layers.drawUnit({
+                    unit: {
+                        id: _e.current.unit,
+                        sleeping: true,
+                        darkened: false,
+                        dir: _e.current.player == 0 ? "right": "left",
+                        color: _e.current.player == 0 ? "red": "blue",
+                        hp: null
+                    },
+                    x: e.grid.x, y: e.grid.y
                 });
             }
             else{
@@ -290,7 +361,7 @@ $(function(){
 
     _c.mouseout(function(){
 
-        if(_e.current.editorMode == 'ground' || _e.current.editorMode == 'buildings'){
+        if(true){
 
             _c.layers.clearLayer(_c.layers.ui);
         }
@@ -353,6 +424,67 @@ $(function(){
                     drawBuilding(e.grid.x, e.grid.y);
 
                     _c.layers.blitBuffer(_c.layers.buildings);
+                }
+            }
+        }
+
+        if(_e.current.editorMode == 'units'){
+            if(e.btn == 1){
+                var drawUnit = function(x, y){
+                    do{
+                        if(_e.map.unit[x][y] == null) break;
+
+                        _c.layers.drawUnit({
+                            x: x, y: y,
+                            unit: {
+                                id: _e.map.unit[x][y].id,
+                                sleeping: true,
+                                darkened: false,
+                                dir: _e.map.unit[x][y].player == 0 ? "right": "left",
+                                color: _e.map.unit[x][y].player == 0 ? "red": "blue",
+                                hp: null
+                            }
+                        });
+                        y++;
+                    }while(y < _c.const.world.grid.h && _e.map.unit[x][y] != null);
+                };
+
+                if(_e.map.unit[e.grid.x][e.grid.y] != null){
+                    if(_e.current.unit != 0) return;
+                    _c.layers.clearBuffer();
+
+                    _e.map.unit[e.grid.x][e.grid.y] = null;
+
+                    if(e.grid.y > 0 && _e.map.unit[e.grid.x][e.grid.y - 1] != null)
+                        _c.layers.drawUnit({
+                            x: e.grid.x, y: e.grid.y - 1,
+                            unit: {
+                                id: _e.map.unit[e.grid.x][e.grid.y - 1].id,
+                                sleeping: true,
+                                darkened: false,
+                                dir: _e.map.unit[e.grid.x][e.grid.y - 1].player == 0 ? "right": "left",
+                                color: _e.map.unit[e.grid.x][e.grid.y - 1].player == 0 ? "red": "blue",
+                                hp: null
+                            }
+                        });
+
+                    if(e.grid.y < _c.const.world.grid.h)
+                        drawUnit(e.grid.x, e.grid.y+1);
+
+                    _c.layers.units.clearRect(32*e.grid.x, 32*e.grid.y - 32, 32, 64);
+                    _c.layers.blitBuffer(_c.layers.units);
+                }
+                else{
+                    _c.layers.clearLayer(_c.layers.ui);
+                    _c.layers.clearBuffer();
+
+                    _e.map.unit[e.grid.x][e.grid.y] = {
+                        id: _e.current.unit,
+                        player: _e.current.player
+                    };
+                    drawUnit(e.grid.x, e.grid.y);
+
+                    _c.layers.blitBuffer(_c.layers.units);
                 }
             }
         }

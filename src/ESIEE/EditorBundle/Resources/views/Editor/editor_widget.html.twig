@@ -6,6 +6,7 @@
         <canvas data-layer="buffer"></canvas>
         <canvas data-layer="background"></canvas>
         <canvas data-layer="buildings"></canvas>
+        <canvas data-layer="units"></canvas>
         <canvas data-layer="ui"></canvas>
     </div>
     <div class="menu">
@@ -102,6 +103,34 @@
                             <div
                                 class="building building-{{ building.x }}-{{ building.y }}"
                                 data-id="{{ building.id }}"
+                            ></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div data-tab="units">
+                <ul class="tabs" data-tab-container="units-menu">
+                    <li data-target="main">
+                        Unites
+                    </li>
+                </ul>
+                <div data-container-name="units-menu">
+                    <div data-tab="main">
+                        <div class="unit erase" data-id="0" data-player="0">
+                            <i class="fa fa-eraser"></i>
+                        </div>
+                        {% for unit in units %}
+                            <div
+                                class="unit unit{{ unit.coordX }}-{{ unit.coordY }}"
+                                data-id="{{ unit.id }}"
+                                data-player="0"
+                            ></div>
+                        {% endfor %}
+                        {% for unit in units %}
+                            <div
+                                class="unit unit{{ unit.coordX+4 }}-{{ unit.coordY }}"
+                                data-id="{{ unit.id }}"
+                                data-player="1"
                             ></div>
                         {% endfor %}
                     </div>

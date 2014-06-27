@@ -51,6 +51,13 @@ class Level
     private $buildings;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="units", type="text")
+     */
+    private $units;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="ESIEE\UserBundle\Entity\User")
@@ -65,8 +72,10 @@ class Level
         $this->size = '20,12';
 
         $emptyTab = json_encode(array_fill(0, 20, array_fill(0, 12, 0)));
+        $emptyTab2 = json_encode(array_fill(0, 20, array_fill(0, 12, null)));
         $this->tiles = $emptyTab;
         $this->buildings = $emptyTab;
+        $this->units = $emptyTab2;
     }
 
 
@@ -91,6 +100,22 @@ class Level
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @param string $units
+     */
+    public function setUnits($units)
+    {
+        $this->units = $units;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnits()
+    {
+        return $this->units;
     }
 
     /**

@@ -45,6 +45,7 @@ class EditorController extends Controller
             'tileFamily' => $this->em->getRepository('ESIEEGameBundle:TileFamily')->findAll(),
             'grounds' => $this->em->getRepository('ESIEEGameBundle:Ground')->findAll(),
             'buildings' => $this->em->getRepository('ESIEEGameBundle:Building')->findAll(),
+            'units' => $this->em->getRepository('ESIEEGameBundle:Unit')->findAll(),
             'level' => $level,
         );
     }
@@ -55,6 +56,7 @@ class EditorController extends Controller
         $level->setBuildings($request->request->get('buildings'));
         $level->setSize($request->request->get('size'));
         $level->setTiles($request->request->get('tiles'));
+        $level->setUnits($request->request->get('units'));
 
         $this->em->persist($level);
         $this->em->flush();
