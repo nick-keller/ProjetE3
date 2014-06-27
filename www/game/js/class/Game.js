@@ -32,7 +32,7 @@ function Game(pMap, pPlayers, pUnits) {
 		"desc": "Bazooka",
 		"longDesc": "A bazooka",
 		"power": 1,
-		"range": 4,
+		"range": 3,
 		"defense": 0,
 		"fast": false,
 		"defender": false,
@@ -61,8 +61,8 @@ function Game(pMap, pPlayers, pUnits) {
 	this.defaultUnits[0].x = 0;
 	this.defaultUnits[0].y = 0;
 	this.defaultUnits[0].player = 0;
-	this.defaultUnits[1].x = 1;
-	this.defaultUnits[1].y = 1;
+	this.defaultUnits[1].x = 0;
+	this.defaultUnits[1].y = 2;
 	this.defaultUnits[1].player = 1;
 
 
