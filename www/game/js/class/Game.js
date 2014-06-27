@@ -27,17 +27,18 @@ function Game(pMap, pPlayers, pUnits) {
 	};
 
 	this.defaultUnit = {
-		"name": "Bowmen",
-		"desc": "An archer",
-		"longDesc": "A troop of archers armed with bows. This is the basic ranged unit.",
+		"id": 1,
+		"name": "Bazooka",
+		"desc": "Bazooka",
+		"longDesc": "A bazooka",
 		"power": 1,
-		"range": 3,
+		"range": 4,
 		"defense": 0,
 		"fast": false,
 		"defender": false,
 		"assassin": false,
 		"moveType": "foot",
-		"moveValue": 3
+		"moveValue": 1
 	};
 
 	this.unitStorage = {0: {}, 1: {}};
