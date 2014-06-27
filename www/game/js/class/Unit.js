@@ -287,10 +287,13 @@
 
 		if (hitBack === false) {
 			unitA.dealDamage(unitB);
+			
 			if (unitA.fast === true)
 				unitA.moved = false;
-			else
+
+			if (unitA.moved === true)
 				_gr.darkenUnit(unitA.x, unitA.y);
+
 			return false;
 		}
 
@@ -312,7 +315,8 @@
 
 		if (unitA.fast === true)
 			unitA.moved = false;
-		else
+
+		if (unitA.moved === true)
 			_gr.darkenUnit(unitA.x, unitA.y);
 
 		return false;
