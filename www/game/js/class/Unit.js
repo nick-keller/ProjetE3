@@ -231,7 +231,10 @@
 			}
 		}
 
-		_gr.moveUnit(this.y, this.x, path);
+		_gr.moveUnit(this.y, this.x, path, function(){
+			if (this.attacked === true)
+				_gr.darkenUnit(this.y, this.x);
+		});
 
 		var tmp = _g.map[this.x][this.y].unit;
 
@@ -249,8 +252,6 @@
 
 		this.moved = true;
 
-		if (this.attacked === true)
-			_gr.darkenUnit(this.y, this.x);
 
 		return false;
 	}; // moveToCell
@@ -289,13 +290,13 @@
 		}
 
 		if (unitB.defender || unitB.guarding) {
-			_gr.showDefenseAnim(unitB.y, unitB.x);
+			// _gr.showDefenseAnim(unitB.y, unitB.x);
 
 			if (unitA.assassin === false) {
 				if (unitB.dealDamage(unitA) === false)
 					unitA.dealDamage(unitB);
 			} else {
-				_gr.showAssassinAnim(unitA.y, unitA.x);
+				// _gr.showAssassinAnim(unitA.y, unitA.x);
 				if (unitA.dealDamage(unitB) === false)
 					unitB.dealDamage(unitA);
 			}
