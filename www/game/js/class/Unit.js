@@ -36,7 +36,7 @@
 		// To execute at initialization
 		_g.map[this.x][this.y].unit = this;
 
-		_gr.addUnit(this.y, this.x, this.unitTypeId);
+		_gr.addUnit(this.y, this.x, {id:this.unitTypeId});
 		_g.unitStorage[this.player][this.id] = {
 			x: this.x,
 			y: this.y
