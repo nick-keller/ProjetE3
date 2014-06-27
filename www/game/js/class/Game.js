@@ -91,8 +91,8 @@ function Game(pMap, pPlayers, pUnits) {
 }
 
 Game.prototype.onClick = function(e) {
-	var x = e.grid.y;
-	var y = e.grid.x;
+	var x = e.grid.x;
+	var y = e.grid.y;
 
 	switch (_g.clickState.state) {
 

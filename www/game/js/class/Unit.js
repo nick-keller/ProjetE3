@@ -295,7 +295,7 @@
 		}
 
 		if (unitB.defender || unitB.guarding) {
-			_gr.showDefenseAnim(unitB.x unitB.y);
+			_gr.showDefenseAnim(unitB.x, unitB.y);
 
 			if (unitA.assassin === false) {
 				if (unitB.dealDamage(unitA) === false)
