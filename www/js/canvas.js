@@ -179,6 +179,7 @@ window._c = {
                 frame: 0
             });
 
+            // find unit
             var unit = _c.const.data.units.filter(function(e){
                 return e.id == params.unit.id;
             });
@@ -186,6 +187,7 @@ window._c = {
             if(unit.length != 1) return;
             unit = unit[0];
 
+            // if we need to darken the unit we have to use buffer2
             var realLayer = params.layer;
             if(params.unit.darkened){
                 _c.layers.clearLayer(_c.layers.buffer2);
@@ -199,11 +201,15 @@ window._c = {
                 params.layer.scale(-1,1);
             }
 
+            // vertical offset
             var offset = 0;
             if(params.unit.dir == "up") offset = 2;
             if(params.unit.dir == "down") offset = 1;
 
-            params.layer.drawImage(_c.const.textures.units, unit.x * 192 + 64*params.frame, unit.y * 192 + 64*offset, 64, 64, params.x * 32 - 16,  params.y * 32-32, 64, 64);
+            // horizontal offset
+            var hOffset = params.unit.color == "red" ? 0 : 768;
+
+            params.layer.drawImage(_c.const.textures.units, unit.x * 192 + 64*params.frame + hOffset, unit.y * 192 + 64*offset, 64, 64, params.x * 32 - 16,  params.y * 32-32, 64, 64);
 
             params.layer.restore();
             params.layer.save();

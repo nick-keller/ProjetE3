@@ -126,6 +126,7 @@ $(function(){
         addUnit: function(x, y, unit){
             unit = _c.setDefaultParams(unit, {
                 hp: null,
+                color: "red",
                 sleeping: false,
                 darkened: false,
                 dir: "right"
