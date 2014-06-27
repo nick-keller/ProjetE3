@@ -130,7 +130,7 @@ Game.prototype.onClick = function(e) {
 
 			if (_g.clickState.moveableCells[x * _g.size + y] !== undefined) {
 				_gr.unHighlightAll();
-				_g.clickState.unit.moveToCell(y, x, _g.clickState.moveableCells);
+				_g.clickState.unit.moveToCell(x, y, _g.clickState.moveableCells);
 				_g.clickState = {
 					state: null
 				};
@@ -173,7 +173,6 @@ Game.prototype.cycleTurn = function() {
 		tmpUnit.guarding = false;
 		tmpUnit.attacked = false;
 		tmpUnit.moved = false;
-		_gr.darkenUnit(tmpUnit.x, tmpUnit.y);
 	}
 
 
