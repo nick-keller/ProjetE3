@@ -150,23 +150,23 @@ Unit.prototype.getMoveableCells = function() {
 Unit.prototype.moveToCell = function(px, py, mc) {
 
 	if (this.player !== _g.turn) {
-		throw new Error("This is not this unit's turn");
 		_g.clickState = {state: null};
+		throw new Error("This is not this unit's turn");
 	}
 
 	if (this.moved === true) {
-		throw new Error("This unit already has moved");
 		_g.clickState = {state: null};
+		throw new Error("This unit already has moved");
 	}
 
 	if (_g.map[px][py].unit !== null) {
-		throw new Error("There is already an unit in the cell " + px + ";" + py);
 		_g.clickState = {state: null};
+		throw new Error("There is already an unit in the cell " + px + ";" + py);
 	}
 
 	if (Math.abs(this.x - px) + Math.abs(this.y - py) > this.moveValue) {
-		throw new Error("Impossible to move this far");
 		_g.clickState = {state: null};
+		throw new Error("Impossible to move this far");
 	}
 
 	var path = [];
@@ -411,7 +411,6 @@ Unit.prototype.dealDamage = function(target) {
  * @return {Bool/Error}; Returns false if sucessfull, else error
  */
 Unit.prototype.destroy = function() {
-	console.log("unit killed"); /*Debug marker*/
 
 	_gr.killUnit(this.x, this.y);
 
