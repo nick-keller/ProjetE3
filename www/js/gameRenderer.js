@@ -127,14 +127,13 @@ $(function(){
             unit = _c.setDefaultParams(unit, {
                 hp: null,
                 sleeping: false,
-                darkened: false
+                darkened: false,
+                dir: "right"
 
             });
 
             unit.opacity = 0;
             unit.createdAt = new Date().getTime();
-
-            console.log("Add unit", unit); /*Debug marker*/
 
             _gr.map.units[x][y] = unit;
         },
@@ -161,8 +160,10 @@ $(function(){
          * kill a unit and play the animation. The function will not return until the animation is complete.
          * @param x
          * @param y
+         * @param callback
          */
-        killUnit: function(x, y){
+        killUnit: function(x, y, callback){
+            callback();
             // TODO
         },
 
@@ -170,8 +171,10 @@ $(function(){
          * play an attack animation. The function will not return until the animation is complete.
          * @param attacker {x, y}
          * @param target {x, y}
+         * @param callback
          */
-        attackUnit: function(attacker, target){
+        attackUnit: function(attacker, target, callback){
+            callback();
             // TODO
         },
 
@@ -179,8 +182,10 @@ $(function(){
          * show the defense animation for a specific unit. The function will not return until the animation is complete.
          * @param x
          * @param y
+         * @param callback
          */
-        showDefenseAnim: function(x, y){
+        showDefenseAnim: function(x, y, callback){
+            callback();
             // TODO
         },
 
@@ -188,8 +193,10 @@ $(function(){
          * show the assassin animation for a specific unit. The function will not return until the animation is complete.
          * @param x
          * @param y
+         * @param callback
          */
-        showAssassinAnim: function(x, y){
+        showAssassinAnim: function(x, y, callback){
+            callback();
             // TODO
         },
 
@@ -298,7 +305,8 @@ $(function(){
 
                     _c.layers.drawUnit({
                         unit: unit,
-                        x: x, y: y
+                        x: x, y: y,
+                        frame: e.animLoop
                     });
 
                     _c.layers.buffer.restore();
@@ -311,7 +319,8 @@ $(function(){
                 else{
                     _c.layers.drawUnit({
                         unit: unit,
-                        x: x, y: y
+                        x: x, y: y,
+                        frame: e.animLoop
                     });
                 }
             }
@@ -324,8 +333,15 @@ $(function(){
             var u = _gr.global.movingUnit;
 
             if(u.currentNode == u.path.length){
+                _c.layers.drawUnit({
+                    unit: u.unit,
+                    x: u.x,
+                    y: u.y,
+                    frame: e.animLoop
+                });
+
                 var lastNode = u.path[u.path.length - 1];
-                _gr.map.units[lastNode.x][lastNode.y] = u;
+                _gr.map.units[lastNode.x][lastNode.y] = u.unit;
                 _gr.global.movingUnit.unit = null;
 
                 if(_gr.global.movingUnit.callback != undefined)
@@ -359,13 +375,19 @@ $(function(){
 
                     u.x += move.x;
                     u.y += move.y;
+
+                    if(move.x > 0) u.unit.dir = "right";
+                    if(move.x < 0) u.unit.dir = "left";
+                    if(move.y > 0) u.unit.dir = "down";
+                    if(move.y < 0) u.unit.dir = "up";
                 }
+                _c.layers.drawUnit({
+                    unit: u.unit,
+                    x: u.x,
+                    y: u.y,
+                    frame: e.animLoop
+                });
             }
-            _c.layers.drawUnit({
-                unit: u.unit,
-                x: u.x,
-                y: u.y
-            });
         }
 
         _c.layers.blitBuffer(_c.layers.units, true);
@@ -393,24 +415,36 @@ $(function(){
         _c.layers.blitBuffer(_c.layers.ui, true);
     });
 
-    _gr.addUnit(0,0,{});
-    _gr.addUnit(0,1,{});
-    _gr.addUnit(1,3,{});
-    _gr.highlightCell(1, 0, "rgba(255,0,0,.6)");
-    _gr.highlightCell(2, 0, "rgba(255,0,0,.6)", "rgba(0,255,0,.6)");
-    _gr.highlightCell(3, 0, "rgba(0,255,0,.3)", "rgba(0,255,0,.6)");
+    _gr.addUnit(0,0,{id:2});
+    _gr.addUnit(0,1,{id:1});
+    _gr.addUnit(1,3,{id:1});
+    _gr.highlightCell(1, 0, "rgba(188,54,54,.6)");
+    _gr.highlightCell(1, 1, "rgba(188,54,54,.6)");
+    _gr.highlightCell(2, 0, "rgba(188,54,54,.6)", "rgba(54,148,188,.6)");
+    _gr.highlightCell(3, 0, null, "rgba(54,148,188,.6)");
+    _gr.highlightCell(2, 1, null, "rgba(54,148,188,.6)");
     setTimeout(function(){
         _gr.unHighlightAll();
         _gr.moveUnit(0, 0, [
             {x:0, y:2},
             {x:1, y:2},
             {x:1, y:3},
-            {x:3, y:3}
+            {x:3, y:3},
+            {x:3, y:1},
+            {x:1, y:1}
         ], function(){
+            _gr.darkenUnit(1, 1);
             _gr.moveUnit(0, 1, [
                 {x:2, y:1},
-                {x:2, y:2}
-            ])
+                {x:2, y:4},
+                {x:0, y:4},
+                {x:0, y:3}
+            ], function(){
+                _gr.darkenUnit(0, 3);
+                setTimeout(function(){
+                    _gr.undarkenAll();
+                }, 2000);
+            })
         });
-    }, 300);
+    }, 4000);
 });

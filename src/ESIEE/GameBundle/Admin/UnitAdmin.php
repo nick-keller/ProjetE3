@@ -41,6 +41,9 @@ class UnitAdmin extends Admin
                 'label' => 'Type d\'unité',
                 'empty_value' => false,
             ))
+            ->add('coordX', 'unitselector', array(
+                'label' => 'Sprite'
+            ))
         ->end()
         ->with('Description')
             ->add('description', null, array(

@@ -14,6 +14,11 @@ services:
         tags:
             - { name: form.type, alias: tiletype }
 
+    game.form.type.unitselector:
+        class: ESIEE\GameBundle\Form\Type\UnitSelectorType
+        tags:
+            - { name: form.type, alias: unitselector }
+
     game.form.type.tileselector:
         class: ESIEE\GameBundle\Form\Type\TileSelectorType
         tags:

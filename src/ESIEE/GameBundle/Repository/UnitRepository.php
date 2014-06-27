@@ -18,6 +18,7 @@ class UnitRepository extends EntityRepository
         return $this->createQueryBuilder('u')
             ->select('u.id, u.name, u.description , u.longDescription longDesc, u.power, u.range, u.defence defense')
             ->addSelect('u.fast, u.attackFirst defender, u.assassin assassin, t.name moveType, u.movement moveValue')
+            ->addSelect('u.coordX x, u.coordY y')
             ->leftJoin('u.unitType', 't')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }

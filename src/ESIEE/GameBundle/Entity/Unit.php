@@ -99,6 +99,20 @@ class Unit
      */
     private $unitType;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="coord_x", type="integer")
+     */
+    private $coordX;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="coord_y", type="integer")
+     */
+    private $coordY;
+
 
     /**
      * Get id
@@ -306,4 +320,57 @@ class Unit
     {
         return $this->range;
     }
+
+    /**
+     * Set coordX
+     *
+     * @param integer $coordX
+     * @return Tile
+     */
+    public function setCoordX($coordX)
+    {
+        if(preg_match('#^[0-9]+-[0-9]+$#', $coordX)){
+            $data = explode('-', $coordX);
+            $this->coordX = $data[0];
+            $this->coordY = $data[1];
+        }
+
+        $this->coordX = $coordX;
+
+        return $this;
+    }
+
+    /**
+     * Get coordX
+     *
+     * @return integer
+     */
+    public function getCoordX()
+    {
+        return $this->coordX;
+    }
+
+    /**
+     * Set coordY
+     *
+     * @param integer $coordY
+     * @return Tile
+     */
+    public function setCoordY($coordY)
+    {
+        $this->coordY = $coordY;
+
+        return $this;
+    }
+
+    /**
+     * Get coordY
+     *
+     * @return integer
+     */
+    public function getCoordY()
+    {
+        return $this->coordY;
+    }
+
 }

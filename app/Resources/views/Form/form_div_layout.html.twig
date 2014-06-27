@@ -109,6 +109,51 @@
     </div>
 {% endblock %}
 
+
+{% block unitselector_widget %}
+    {% set tile = form.vars.sonata_admin.admin.subject %}
+    {% set val = tile.coordX~'-'~tile.coordY %}
+    <style scoped="scoped">
+        .unit-selector{
+            background: url('{{ asset('spritesheet/units.png') }}');
+            width: 384px;
+            height: 768px;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .unit-selector label{
+            display: inline-block;
+            width: 96px;
+            height: 96px;
+            margin: 0;
+            cursor: pointer;
+            box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+        }
+
+        .unit-selector label:hover{
+            box-shadow: 0 0 0 1px #6FBF59;
+        }
+
+        .unit-selector .iradio_minimal{
+            display: none;
+        }
+
+        .unit-selector .iradio_minimal.checked + label{
+            box-shadow: 0 0 0 1px white;
+            background: rgba(111,191,89,.5);
+        }
+    </style>
+    <div class="unit-selector">
+        {% for j in 0..7 %}
+            {% for i in 0..3 %}
+                <input id="{{ i~'-'~j }}" type="radio" name="{{ form.vars.full_name }}" value="{{ i~'-'~j }}" {% if val == i~'-'~j %}checked{% endif %}>
+                <label for="{{ i~'-'~j }}"></label>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block buildingselector_widget %}
     {% set tile = form.vars.sonata_admin.admin.subject %}
     {% set val = tile.coordX~'-'~tile.coordY %}

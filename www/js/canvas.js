@@ -165,23 +165,63 @@ window._c = {
 
         /**
          * draw a unit in grid unit
-         * default params: {layer:buffer, unit:{id:1}, x:0, y:0}
+         * default params: {layer:buffer, unit:{id:1}, x:0, y:0, frame:0}
          * @param params parameters of the unit to be drawn
          */
         drawUnit: function(params){
             params = _c.setDefaultParams(params, {
                 layer: _c.layers.buffer,
-                unit: {id:1},
-                x: 0, y: 0
+                unit: {
+                    id:1,
+                    dir: "right"
+                },
+                x: 0, y: 0,
+                frame: 0
             });
 
-            _c.layers.drawRect({
-                layer: params.layer,
-                x: params.x*32 +2, y: params.y*32 +2,
-                w: 28, h: 28,
-                fill: "#36BC92",
-                stroke: "#113D2F"
+            var unit = _c.const.data.units.filter(function(e){
+                return e.id == params.unit.id;
             });
+
+            if(unit.length != 1) return;
+            unit = unit[0];
+
+            var realLayer = params.layer;
+            if(params.unit.darkened){
+                _c.layers.clearLayer(_c.layers.buffer2);
+                params.layer = _c.layers.buffer2;
+            }
+
+            params.layer.save();
+
+            if(params.unit.dir == "right"){
+                params.layer.translate(params.x * 64 + 32, 0);
+                params.layer.scale(-1,1);
+            }
+
+            var offset = 0;
+            if(params.unit.dir == "up") offset = 2;
+            if(params.unit.dir == "down") offset = 1;
+
+            params.layer.drawImage(_c.const.textures.units, unit.x * 192 + 64*params.frame, unit.y * 192 + 64*offset, 64, 64, params.x * 32 - 16,  params.y * 32-32, 64, 64);
+
+            params.layer.restore();
+            params.layer.save();
+
+            if(params.unit.darkened){
+                params.layer.globalCompositeOperation = "source-atop";
+                _c.layers.drawRect({
+                    layer: params.layer,
+                    x: params.x*32 -16,
+                    y: params.y*32 -32,
+                    w: 64, h: 64,
+                    fill: "rgba(0,0,0,.6)"
+                });
+
+                realLayer.drawImage(_c.canvas.buffer2[0], 0, 0);
+            }
+
+            params.layer.restore();
         }
     },
 
@@ -213,9 +253,12 @@ window._c = {
         _c.const.textures.tiles.src = 'http://localhost/ProjetE3/www/spritesheet/tilesx2.png';
         _c.const.textures.buildings = new Image();
         _c.const.textures.buildings.src = 'http://localhost/ProjetE3/www/spritesheet/buildingsx2.png';
+        _c.const.textures.units = new Image();
+        _c.const.textures.units.src = 'http://localhost/ProjetE3/www/spritesheet/unitsx2.png';
         _c.const.data.tiles = tiles;
         _c.const.data.tileFamily = tileFamily;
         _c.const.data.buildings = buildings;
+        _c.const.data.units = units;
 
         _c.playground = playground;
         var $canvas = _c.playground.find('canvas');
@@ -391,6 +434,7 @@ window._c = {
             var event = {
                 loop: time,
                 halfLoop: Math.cos(time*6.28)/2+0.5,
+                animLoop: Math.floor(time*4) == 3 ? 1 : Math.floor(time*4),
                 delta: (currentTime - _c.const.render.prevTime) / 1000,
                 time: currentTime
             };
