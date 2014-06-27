@@ -107,17 +107,17 @@
 			if (x >= maxX || y >= maxY || x < 0 || y < 0)
 				return;
 
+			var tmpRemain = remaining - _g.map[x][y].terrain.moveFactor[unit.moveType];
+
 			if (_g.map[x][y].unit !== null)
 				if (_g.map[x][y].unit.player !== _g.turn)
 					return;
 
-			if (remain < 0)
+			if (tmpRemain < 0)
 				return;
 
 			if (cells[x * size + y] >= tmpRemain)
 				return;
-
-			var tmpRemain = remaining - _g.map[x][y].terrain.moveFactor[unit.moveType];
 
 			cells[x * size + y] = tmpRemain;
 
