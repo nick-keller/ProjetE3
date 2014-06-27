@@ -38,7 +38,7 @@ function Game(pMap, pPlayers, pUnits) {
 		"defender": false,
 		"assassin": false,
 		"moveType": "foot",
-		"moveValue": 1
+		"moveValue": 2
 	};
 
 	this.unitStorage = {0: {}, 1: {}};
@@ -61,8 +61,8 @@ function Game(pMap, pPlayers, pUnits) {
 	this.defaultUnits[0].x = 0;
 	this.defaultUnits[0].y = 0;
 	this.defaultUnits[0].player = 0;
-	this.defaultUnits[1].x = 0;
-	this.defaultUnits[1].y = 2;
+	this.defaultUnits[1].x = 1;
+	this.defaultUnits[1].y = 1;
 	this.defaultUnits[1].player = 1;
 
 

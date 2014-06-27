@@ -36,7 +36,7 @@
 		// To execute at initialization
 		_g.map[this.x][this.y].unit = this;
 
-		_gr.addUnit(this.y, this.x, {id:this.unitTypeId});
+		_gr.addUnit(this.y, this.x, {id:this.unitTypeId}, player === 0?'red':'blue');
 		_g.unitStorage[this.player][this.id] = {
 			x: this.x,
 			y: this.y
@@ -75,7 +75,7 @@
 	 * @this {Object}; The unit
 	 * @return {Bool/Error}; Returns false if sucessfull, else error
 	 */
-	Unit.prototype.guard = function() {
+	Unit.prototype.rest = function() {
 		if (this.attacked || this.moved)
 			return new Error("This unit already has moved or attacked," +
 				" it can't rest");
@@ -128,8 +128,6 @@
 
 		})(unit.x, unit.y, unit.moveValue);
 
-		cells.fact = size;
-
 		return cells;
 	};
 
@@ -169,8 +167,6 @@
 
 		})(unit.x, unit.y, unit.range);
 
-		cells.fact = size;
-
 		return cells;
 	};
 
@@ -200,7 +196,7 @@
 
 		var x = px;
 		var y = py;
-		var remaining = mc[x * mc.fact + y];
+		var remaining = mc[x * _g.size + y];
 
 		while (x !== this.x && y !== this.y) {
 			path.unshift({
@@ -210,22 +206,22 @@
 
 			var cost = _g.map[x][y].terrain.moveFactor[this.moveType];
 
-			if (mc[x * mc.fact + y - 1] + cost === remaining) {
+			if (mc[x * _g.size + y - 1] + cost === remaining) {
 				y--;
 				continue;
 			}
 
-			if (mc[x * mc.fact + y + 1] + cost === remaining) {
+			if (mc[x * _g.size + y + 1] + cost === remaining) {
 				y++;
 				continue;
 			}
 
-			if (mc[x * mc.fact + y - 1 * mc.fact] + cost === remaining) {
+			if (mc[x * _g.size + y - 1 * _g.size] + cost === remaining) {
 				x--;
 				continue;
 			}
 
-			if (mc[x * mc.fact + y + 1 * mc.fact] + cost === remaining) {
+			if (mc[x * _g.size + y + 1 * _g.size] + cost === remaining) {
 				x++;
 				continue;
 			}
