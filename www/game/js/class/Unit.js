@@ -198,14 +198,12 @@
 		var ty = py;
 		var remaining = mc[tx * _g.size + ty];
 
-        console.log("tx="+tx+", ty="+ty); /*Debug marker*/
-        console.log(this.x, this.y); /*Debug marker*/
 		while (tx !== this.x || ty !== this.y) {
 
 
 			path.unshift({
-				x: ty,
-				y: tx
+				x: tx,
+				y: ty
 			});
 
             console.log(tx, ty, mc);
@@ -236,7 +234,7 @@
 
 		_gr.moveUnit(this.y, this.x, path, function(){
 			if (this.attacked === true)
-				_gr.darkenUnit(this.y, this.x);
+				_gr.darkenUnit(py, px);
 		});
 
 		var tmp = _g.map[this.x][this.y].unit;
@@ -270,36 +268,40 @@
 		var unitA = this;
 
 		if (unitA.player !== _g.turn)
-			return new Error("This is not this unit's turn");
+			throw new Error("This is not this unit's turn");
 
 		if (unitA.attacked === true)
-			return new Error("This unit already attacked");
+			throw new Error("This unit already attacked");
 
 		var dist = Math.abs(unitB.x - unitA.x) + Math.abs(unitB.y - unitA.y);
 
 		var hitBack = (unitB.range <= dist) && !unitB.resting;
 
 		if (unitA.range <= dist)
-			return new Error("Insufficient range");
+			throw new Error("Insufficient range");
 
 		if (unitB.player === unitA.player)
-			return new Error("Attacking your own unit would be pretty stupid");
+			throw new Error("Attacking your own unit would be pretty stupid");
 
 		unitA.attacked = true;
 
 		if (hitBack === false) {
 			unitA.dealDamage(unitB);
+			if (unitA.fast === true)
+				unitA.moved = false;
+			else
+				_gr.darkenUnit(unitA.y, unitA.x);
 			return false;
 		}
 
 		if (unitB.defender || unitB.guarding) {
-			// _gr.showDefenseAnim(unitB.y, unitB.x);
+			_gr.showDefenseAnim(unitB.y, unitB.x);
 
 			if (unitA.assassin === false) {
 				if (unitB.dealDamage(unitA) === false)
 					unitA.dealDamage(unitB);
 			} else {
-				// _gr.showAssassinAnim(unitA.y, unitA.x);
+				_gr.showAssassinAnim(unitA.y, unitA.x);
 				if (unitA.dealDamage(unitB) === false)
 					unitB.dealDamage(unitA);
 			}
