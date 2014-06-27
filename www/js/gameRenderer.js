@@ -379,8 +379,8 @@ $(function(){
                         y: toTarget.y == 0 ? 0 : toTarget.y > 0 ? 1 : -1
                     };
 
-                    move.x *= e.delta;
-                    move.y *= e.delta;
+                    move.x *= e.delta * 5;
+                    move.y *= e.delta * 5;
 
                     if(Math.abs(toTarget.x) < Math.abs(move.x)) move.x = toTarget.x;
                     if(Math.abs(toTarget.y) < Math.abs(move.y)) move.y = toTarget.y;

@@ -395,7 +395,7 @@ Unit.prototype.dealDamage = function(target) {
 		y: target.y
 	});
 
-	_gr.setHP(target.x, target.y, Math.round(target.hp));
+	_gr.setHP(target.x, target.y, Math.floor(target.health));
 
 	if (target.health <= 0.0) {
 		target.destroy();
