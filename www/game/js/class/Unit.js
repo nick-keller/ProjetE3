@@ -7,6 +7,7 @@
  * @return {Object}; this
  */
 function Unit(param, x, y, player) {
+    console.log(param);
 	this.name = param.name;
 	this.desc = param.desc;
 	this.longDesc = param.longDesc;

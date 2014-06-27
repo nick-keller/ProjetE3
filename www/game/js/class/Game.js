@@ -63,6 +63,7 @@ function Game(pMap, pUnits, pPlayers) {
 
 
 	for (var i = this.units.length - 1; i >= 0; i--) {
+        console.log(i);
 		new Unit(this.units[i], this.units[i].x, this.units[i].y, this.units[i].player);
 	}
 

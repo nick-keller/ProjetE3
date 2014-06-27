@@ -1,6 +1,6 @@
 $(function(){
 	var map = _gr.map.ground;
-	var units = [];
+	var unitspre = [];
 
 	for (var i = map.length - 1; i >= 0; i--) {
 		for (var j = map[i].length - 1; j >= 0; j--) {
@@ -9,14 +9,12 @@ $(function(){
 					return e.id == level.units[i][j].id;
 				});
 
-				console.log("new unit"); /*Debug marker*/
-
 				unit = $.extend(true, {}, unit[0]);
 				unit.x = i;
 				unit.y = j;
 				unit.player = level.units[i][j].player;
 
-				units.push(unit);
+				unitspre.push(unit);
 
 			}
 
@@ -32,6 +30,6 @@ $(function(){
 
 
 
-	new Game(map);
+	new Game(map, unitspre);
 	_c.mousedown(_g.onClick);
 });
