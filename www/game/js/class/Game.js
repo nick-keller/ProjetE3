@@ -110,14 +110,14 @@ Game.prototype.onClick = function(e) {
 					// TODO: menu
 
                     for (var i in _g.clickState.attCells) {
-                        _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), null, "rgba(188,54,54,.6)");
+                        _gr.highlightCell(Math.floor(i / _g.size), i % _g.size, null, "rgba(188,54,54,.6)");
                     }
 
 					for (var i in _g.clickState.moveableCells) {
 						if (_g.clickState.attCells[i] !== undefined) {
-							_gr.highlightCell(i % _g.size, Math.floor(i / _g.size), "rgba(54,148,188,.6)", "rgba(188,54,54,.6)");
+							_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", "rgba(188,54,54,.6)");
 						} else {
-                            _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), "rgba(54,148,188,.6)", null);
+                            _gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", null);
 						}
 					}
 
@@ -173,7 +173,7 @@ Game.prototype.cycleTurn = function() {
 		tmpUnit.guarding = false;
 		tmpUnit.attacked = false;
 		tmpUnit.moved = false;
-		_gr.darkenUnit(tmpUnit.y, tmpUnit.x);
+		_gr.darkenUnit(tmpUnit.x, tmpUnit.y);
 	}
 
 
