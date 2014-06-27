@@ -221,7 +221,7 @@ window._c = {
                     x: params.x*32 -16,
                     y: params.y*32 -32,
                     w: 64, h: 64,
-                    fill: "rgba(0,0,0,.6)"
+                    fill: "rgba(0,0,0,.4)"
                 });
 
                 realLayer.drawImage(_c.canvas.buffer2[0], 0, 0);
