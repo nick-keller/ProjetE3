@@ -225,6 +225,17 @@ window._c = {
                 });
 
                 realLayer.drawImage(_c.canvas.buffer2[0], 0, 0);
+                params.layer = realLayer;
+            }
+
+            if(params.unit.hp != null){
+                _c.layers.drawRect({
+                    x: params.x*32,
+                    y: params.y*32,
+                    w: 5,
+                    h: 7,
+                    fill: "black"
+                });
             }
 
             params.layer.restore();
