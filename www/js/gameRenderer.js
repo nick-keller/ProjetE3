@@ -415,36 +415,36 @@ $(function(){
         _c.layers.blitBuffer(_c.layers.ui, true);
     });
 
-    _gr.addUnit(0,0,{id:2});
-    _gr.addUnit(0,1,{id:1});
-    _gr.addUnit(1,3,{id:1});
-    _gr.highlightCell(1, 0, "rgba(188,54,54,.6)");
-    _gr.highlightCell(1, 1, "rgba(188,54,54,.6)");
-    _gr.highlightCell(2, 0, "rgba(188,54,54,.6)", "rgba(54,148,188,.6)");
-    _gr.highlightCell(3, 0, null, "rgba(54,148,188,.6)");
-    _gr.highlightCell(2, 1, null, "rgba(54,148,188,.6)");
-    setTimeout(function(){
-        _gr.unHighlightAll();
-        _gr.moveUnit(0, 0, [
-            {x:0, y:2},
-            {x:1, y:2},
-            {x:1, y:3},
-            {x:3, y:3},
-            {x:3, y:1},
-            {x:1, y:1}
-        ], function(){
-            _gr.darkenUnit(1, 1);
-            _gr.moveUnit(0, 1, [
-                {x:2, y:1},
-                {x:2, y:4},
-                {x:0, y:4},
-                {x:0, y:3}
-            ], function(){
-                _gr.darkenUnit(0, 3);
-                setTimeout(function(){
-                    _gr.undarkenAll();
-                }, 2000);
-            })
-        });
-    }, 4000);
+//    _gr.addUnit(0,0,{id:2});
+//    _gr.addUnit(0,1,{id:1});
+//    _gr.addUnit(1,3,{id:1});
+//    _gr.highlightCell(1, 0, "rgba(188,54,54,.6)");
+//    _gr.highlightCell(1, 1, "rgba(188,54,54,.6)");
+//    _gr.highlightCell(2, 0, "rgba(188,54,54,.6)", "rgba(54,148,188,.6)");
+//    _gr.highlightCell(3, 0, null, "rgba(54,148,188,.6)");
+//    _gr.highlightCell(2, 1, null, "rgba(54,148,188,.6)");
+//    setTimeout(function(){
+//        _gr.unHighlightAll();
+//        _gr.moveUnit(0, 0, [
+//            {x:0, y:2},
+//            {x:1, y:2},
+//            {x:1, y:3},
+//            {x:3, y:3},
+//            {x:3, y:1},
+//            {x:1, y:1}
+//        ], function(){
+//            _gr.darkenUnit(1, 1);
+//            _gr.moveUnit(0, 1, [
+//                {x:2, y:1},
+//                {x:2, y:4},
+//                {x:0, y:4},
+//                {x:0, y:3}
+//            ], function(){
+//                _gr.darkenUnit(0, 3);
+//                setTimeout(function(){
+//                    _gr.undarkenAll();
+//                }, 2000);
+//            })
+//        });
+//    }, 4000);
 });
