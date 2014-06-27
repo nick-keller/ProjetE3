@@ -94,7 +94,7 @@ Game.prototype.onClick = function(e) {
 	var x = e.grid.y;
 	var y = e.grid.x;
 
-	var cl = JSON.parse(JSON.stringify(clickState));
+	var cl = JSON.parse(JSON.stringify(_g.clickState));
 	switch (cl.state) {
 
 		case null:
@@ -111,14 +111,14 @@ Game.prototype.onClick = function(e) {
 					// TODO: menu
 					for (var i in _g.clickState.moveableCells) {
 						if (_g.clickState.attCells[i] !== undefined) {
-							highlightCell(i % size, Math.floor(i / size), blue, red);
+							_gr.highlightCell(i % _g.size, Math.floor(i / _g.size), 'blue', 'red');
 						} else {
-							highlightCell(i % size, Math.floor(i / size), blue, null);
+                            _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), 'blue', "rgba(0,0,0,0)");
 						}
 					}
 
 					for (var i in _g.clickState.attCells) {
-						highlightCell(i % size, Math.floor(i / size), blue, red);
+                        _gr.highlightCell(i % _g.size, Math.floor(i / _g.size), "rgba(0,0,0,0)", 'red');
 					}
 
 
