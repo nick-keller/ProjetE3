@@ -311,7 +311,7 @@ Unit.prototype.attack = function(unitB) {
 
 	var hitBack = (unitB.range >= dist) && !unitB.resting;
 
-	if (unitA.range > dist) {
+	if (unitA.range < dist) {
 		_g.clickState = {state: null};
 		throw new Error("Insufficient range");
 	}
