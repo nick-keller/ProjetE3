@@ -36,7 +36,7 @@
 		// To execute at initialization
 		_g.map[this.x][this.y].unit = this;
 
-		_gr.addUnit(this.y, this.x, {id:this.unitTypeId}, player === 0?'red':'blue');
+		_gr.addUnit(this.y, this.x, {id:this.unitTypeId, color:player === 0?'red':'blue'});
 		_g.unitStorage[this.player][this.id] = {
 			x: this.x,
 			y: this.y
@@ -206,7 +206,7 @@
 				x: ty,
 				y: tx
 			});
-
+            console.log(x, y);
 			var cost = _g.map[x][y].terrain.moveFactor[this.moveType];
 
 			if (mc[tx * _g.size + ty - 1] + cost === remaining) {
