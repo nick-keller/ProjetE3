@@ -96,17 +96,22 @@ Game.prototype.onClick = function(e) {
 					_g.clickState.attCells = unit.getAttCells();
 					// TODO: menu
 
+					if (unit.attacked === true && unit.moved === true) {
+						_g.clickState = {state: null};
+						throw new Error("This unit already has moved or attack");
+					}
+
 					if (unit.attacked === false) {
 						for (var i in _g.clickState.attCells) {
 							_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, null, "rgba(188,54,54,.6)", null);
 						}
 					}
-					
+
 					if (unit.moved === false) {
 						for (var i in _g.clickState.moveableCells) {
-							if (_g.clickState.attCells[i] !== undefined) {
+							if (_g.clickState.attCells[i] !== undefined && unit.attacked === false) {
 								_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", "rgba(188,54,54,.6)");
-							} else if (unit.attacked === false) {
+							} else {
 								_gr.highlightCell(Math.floor(i / _g.size), i % _g.size, "rgba(54,148,188,.6)", null);
 							}
 						}
