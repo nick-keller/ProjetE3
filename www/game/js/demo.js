@@ -12,6 +12,9 @@ $(function(){
 	}
 
 
+
+
+
 	new Game(map);
 	_c.mousedown(_g.onClick);
 });

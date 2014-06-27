@@ -1,6 +1,6 @@
 
 
-function Game(pMap, pPlayers, pUnits) {
+function Game(pMap, pUnits, pPlayers) {
 
 	window._g = this;
 
@@ -26,20 +26,7 @@ function Game(pMap, pPlayers, pUnits) {
 		sprite: null
 	};
 
-	this.defaultUnit = {
-		"id": 1,
-		"name": "Bazooka",
-		"desc": "Bazooka",
-		"longDesc": "A bazooka",
-		"power": 4,
-		"range": 3,
-		"defense": 0,
-		"fast": false,
-		"defender": false,
-		"assassin": false,
-		"moveType": "foot",
-		"moveValue": 3
-	};
+	this.defaultUnit = units[0];
 
 	this.unitStorage = {0: {}, 1: {}};
 
