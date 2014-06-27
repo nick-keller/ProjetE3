@@ -121,7 +121,7 @@ $(function(){
          * if a unit is already on the specified location it will be replaced
          * @param x
          * @param y
-         * @param unit an object formatted as follow: {(int) id[, (int) hp, (bool) sleeping, (bool) darkened]}
+         * @param unit an object formatted as follow: {(int) id, (str) color[, (int) hp, (bool) sleeping, (bool) darkened]}
          */
         addUnit: function(x, y, unit){
             unit = _c.setDefaultParams(unit, {
@@ -209,11 +209,17 @@ $(function(){
          */
         highlightCell: function(x, y, color1, color2){
             var c1 = tinycolor(color1);
-            var c2 = tinycolor(c1.toRgb());
-            c2.setAlpha(c1.getAlpha() *.5);
+            var c2 = tinycolor(color2);
 
-            if(color2 != undefined)
-                c2 = tinycolor(color2);
+            if(color2 == undefined || color2 == null){
+                c2 = tinycolor(c1.toRgb());
+                c2.setAlpha(0);
+            }
+
+            if(color1 == undefined || color1 == null){
+                c1 = tinycolor(c2.toRgb());
+                c1.setAlpha(0);
+            }
 
             _gr.map.highlightedArea[x][y] = {c1: c1,c2:c2};
         },
